@@ -3,7 +3,7 @@ import HeroCarousel from '../components/HeroCarousel'
 import HistoriaIntro from '../components/HistoriaIntro'
 import AcervoSection from '../components/AcervoSection'
 import FigurasNotaveis from '../components/FigurasNotaveis'
-import HemerotecaSection from '../components/HemerotecaSection'
+import MidiaSection from '../components/MidiaSection'
 import GrupoComunitario from '../components/GrupoComunitario'
 import NoticiasSection from '../components/NoticiasSection'
 import ProjetosSection from '../components/ProjetosSection'
@@ -23,8 +23,8 @@ export default function Home() {
       {/* Dobra 4: Figuras Notáveis */}
       <FigurasNotaveis />
 
-      {/* Dobra 5: Hemeroteca */}
-      <HemerotecaSection />
+      {/* Dobra 5: Mídia */}
+      <MidiaSection />
 
       {/* Dobra 6: Grupo Comunitário */}
       <GrupoComunitario />

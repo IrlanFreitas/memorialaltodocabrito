@@ -2,19 +2,22 @@ import React, { useState } from 'react'
 import { Link } from 'react-router'
 import { motion } from 'motion/react'
 import { ArrowRight, CheckCircle, Loader } from 'lucide-react'
-import { projetos } from '../data/mockData'
 import { ImageWithFallback } from '../figma/ImageWithFallback'
+import { useProjetos } from '../hooks/useProjetos'
 
-const statusLabels = {
-  em_andamento: 'Em andamento',
+const statusLabels: Record<string, string> = {
+  ativo: 'Em andamento',
   concluido: 'Concluído',
-  planejado: 'Planejado',
+  pausado: 'Pausado',
 }
 
 export default function ProjetosPage() {
   const [filtro, setFiltro] = useState<string>('todos')
+  const { data, isLoading } = useProjetos()
 
-  const filtered = filtro === 'todos' ? projetos : projetos.filter((p) => p.status === filtro)
+  const filtered = filtro === 'todos'
+    ? (data ?? [])
+    : (data ?? []).filter((p) => p.acf.status === filtro)
 
   return (
     <div style={{ backgroundColor: 'var(--preto)', minHeight: '100vh', paddingTop: '80px' }}>
@@ -42,7 +45,7 @@ export default function ProjetosPage() {
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px 16px' }}>
         {/* Filters */}
         <div style={{ display: 'flex', gap: '8px', marginBottom: '28px', flexWrap: 'wrap' }}>
-          {['todos', 'em_andamento', 'concluido'].map((s) => (
+          {['todos', 'ativo', 'concluido', 'pausado'].map((s) => (
             <button
               key={s}
               onClick={() => setFiltro(s)}
@@ -59,7 +62,7 @@ export default function ProjetosPage() {
                 transition: 'all 200ms',
               }}
             >
-              {s === 'todos' ? 'Todos' : statusLabels[s as keyof typeof statusLabels]}
+              {s === 'todos' ? 'Todos' : (statusLabels[s] ?? s)}
             </button>
           ))}
         </div>
@@ -68,14 +71,23 @@ export default function ProjetosPage() {
           style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: '20px' }}
           className="sm:grid-cols-2 lg:grid-cols-2"
         >
-          {filtered.map((projeto, i) => (
+          {isLoading && (
+            <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '40px 0', color: 'var(--cinza-medio)', fontFamily: 'var(--font-primary)' }}>
+              Carregando...
+            </div>
+          )}
+          {filtered.map((projeto, i) => {
+            const img = projeto._embedded?.['wp:featuredmedia']?.[0]?.source_url
+              ?? projeto.acf.imagem_capa?.url
+              ?? ''
+            return (
             <motion.div
               key={projeto.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: i * 0.08 }}
             >
-              <Link to={`/projetos/${projeto.id}`} style={{ textDecoration: 'none' }}>
+              <Link to={`/projetos/${projeto.slug}`} style={{ textDecoration: 'none' }}>
                 <motion.article
                   whileHover={{ y: -4 }}
                   transition={{ duration: 0.3 }}
@@ -99,8 +111,8 @@ export default function ProjetosPage() {
                       style={{ width: '100%', height: '100%' }}
                     >
                       <ImageWithFallback
-                        src={projeto.imagem}
-                        alt={projeto.titulo}
+                        src={img}
+                        alt={projeto.title.rendered}
                         style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', minHeight: '120px' }}
                       />
                     </motion.div>
@@ -114,18 +126,18 @@ export default function ProjetosPage() {
                           gap: '4px',
                           fontSize: '10px',
                           fontWeight: 700,
-                          color: projeto.status === 'em_andamento' ? 'var(--laranja)' : '#22c55e',
+                          color: projeto.acf.status === 'ativo' ? 'var(--laranja)' : '#22c55e',
                           fontFamily: 'var(--font-primary)',
                           textTransform: 'uppercase',
                           letterSpacing: '0.05em',
                         }}
                       >
-                        {projeto.status === 'concluido' ? <CheckCircle size={10} /> : <Loader size={10} />}
-                        {statusLabels[projeto.status]}
+                        {projeto.acf.status === 'concluido' ? <CheckCircle size={10} /> : <Loader size={10} />}
+                        {statusLabels[projeto.acf.status] ?? projeto.acf.status}
                       </span>
                       <span style={{ color: 'var(--cinza-borda)' }}>·</span>
                       <span style={{ fontSize: '12px', color: 'var(--cinza-medio)', fontFamily: 'var(--font-primary)' }}>
-                        {projeto.ano}
+                        {projeto.acf.ano_inicio}
                       </span>
                     </div>
                     <h3
@@ -138,7 +150,7 @@ export default function ProjetosPage() {
                         marginBottom: '6px',
                       }}
                     >
-                      {projeto.titulo}
+                      {projeto.title.rendered}
                     </h3>
                     <p
                       style={{
@@ -153,7 +165,7 @@ export default function ProjetosPage() {
                         overflow: 'hidden',
                       }}
                     >
-                      {projeto.descricao}
+                      {projeto.acf.resumo}
                     </p>
                     <span
                       style={{
@@ -172,7 +184,8 @@ export default function ProjetosPage() {
                 </motion.article>
               </Link>
             </motion.div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </div>

@@ -2,12 +2,13 @@ import React from 'react'
 import { Link } from 'react-router'
 import { motion } from 'motion/react'
 import { ArrowRight } from 'lucide-react'
-import { figurasNotaveis } from '../data/mockData'
 import { ImageWithFallback } from '../figma/ImageWithFallback'
 import { BotaoExplore } from './BotaoExplore'
+import { useFiguras } from '../hooks/useFiguras'
 
 export default function FigurasNotaveis() {
-  const destaque = figurasNotaveis.slice(0, 4)
+  const { data } = useFiguras()
+  const destaque = (data ?? []).filter((f) => f.acf.destaque_home).slice(0, 4)
 
   return (
     <section
@@ -66,7 +67,11 @@ export default function FigurasNotaveis() {
           }}
           className="sm:grid-cols-2 lg:grid-cols-4"
         >
-          {destaque.map((figura, i) => (
+          {destaque.map((figura, i) => {
+            const foto = figura._embedded?.['wp:featuredmedia']?.[0]?.source_url
+              ?? figura.acf.foto?.url
+              ?? ''
+            return (
             <motion.div
               key={figura.id}
               initial={{ opacity: 0, y: 28 }}
@@ -79,7 +84,7 @@ export default function FigurasNotaveis() {
               }}
             >
               <Link
-                to={`/figuras-notaveis/${figura.id}`}
+                to={`/figuras-notaveis/${figura.slug}`}
                 style={{ textDecoration: 'none', display: 'block' }}
               >
                 <motion.article
@@ -113,8 +118,8 @@ export default function FigurasNotaveis() {
                     }}
                   >
                     <ImageWithFallback
-                      src={figura.foto}
-                      alt={figura.nome}
+                      src={foto}
+                      alt={figura.title.rendered}
                       style={{
                         width: '100%',
                         height: '100%',
@@ -139,7 +144,7 @@ export default function FigurasNotaveis() {
                       letterSpacing: '0.04em',
                     }}
                   >
-                    {figura.categoria}
+                    {figura.acf.area_atuacao}
                   </span>
 
                   {/* Name */}
@@ -153,7 +158,7 @@ export default function FigurasNotaveis() {
                       marginBottom: '4px',
                     }}
                   >
-                    {figura.nome}
+                    {figura.title.rendered}
                   </h3>
 
                   {/* Period */}
@@ -165,10 +170,10 @@ export default function FigurasNotaveis() {
                       marginBottom: '10px',
                     }}
                   >
-                    {figura.periodo}
+                    {figura.acf.periodo}
                   </p>
 
-                  {/* Contribution */}
+                  {/* Bio */}
                   <p
                     style={{
                       fontSize: '13px',
@@ -181,7 +186,7 @@ export default function FigurasNotaveis() {
                       overflow: 'hidden',
                     }}
                   >
-                    {figura.bio}
+                    {figura.acf.bio}
                   </p>
 
                   <div
@@ -202,7 +207,8 @@ export default function FigurasNotaveis() {
                 </motion.article>
               </Link>
             </motion.div>
-          ))}
+            )
+          })}
         </div>
 
         {/* CTA */}

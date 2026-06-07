@@ -2,12 +2,20 @@ import React from 'react'
 import { useParams, Link } from 'react-router'
 import { motion } from 'motion/react'
 import { ArrowLeft, Calendar, CheckCircle, Loader, Users } from 'lucide-react'
-import { projetos } from '../data/mockData'
 import { ImageWithFallback } from '../figma/ImageWithFallback'
+import { useProjetoDetalhe } from '../hooks/useProjetos'
 
 export default function ProjetoDetalhe() {
   const { id } = useParams()
-  const projeto = projetos.find((p) => p.id === id)
+  const { data: projeto, isLoading } = useProjetoDetalhe(id ?? '')
+
+  if (isLoading) {
+    return (
+      <div style={{ backgroundColor: 'var(--preto)', minHeight: '100vh', paddingTop: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ color: 'var(--laranja)', fontFamily: 'var(--font-primary)', fontSize: '16px' }}>Carregando...</p>
+      </div>
+    )
+  }
 
   if (!projeto) {
     return (
@@ -19,6 +27,12 @@ export default function ProjetoDetalhe() {
       </div>
     )
   }
+
+  const img = projeto._embedded?.['wp:featuredmedia']?.[0]?.source_url
+    ?? projeto.acf.imagem_capa?.url
+    ?? ''
+  const galeria = (projeto.acf.galeria ?? []).map((g) => g.url).filter(Boolean)
+  const nomeParceiros = (projeto.acf.parceiros ?? []).map((p) => p.nome)
 
   return (
     <div style={{ backgroundColor: 'var(--preto)', minHeight: '100vh', paddingTop: '80px' }}>
@@ -43,8 +57,8 @@ export default function ProjetoDetalhe() {
           style={{ borderRadius: 'var(--radius-xl)', overflow: 'hidden', marginBottom: '32px', aspectRatio: '16/9' }}
         >
           <ImageWithFallback
-            src={projeto.imagem}
-            alt={projeto.titulo}
+            src={img}
+            alt={projeto.title.rendered}
             style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
           />
         </motion.div>
@@ -64,27 +78,27 @@ export default function ProjetoDetalhe() {
                 gap: '4px',
                 fontSize: '12px',
                 fontWeight: 700,
-                color: projeto.status === 'em_andamento' ? 'var(--laranja)' : '#22c55e',
+                color: projeto.acf.status === 'ativo' ? 'var(--laranja)' : '#22c55e',
                 fontFamily: 'var(--font-primary)',
                 textTransform: 'uppercase',
                 letterSpacing: '0.06em',
               }}
             >
-              {projeto.status === 'concluido' ? <CheckCircle size={12} /> : <Loader size={12} />}
-              {projeto.status === 'em_andamento' ? 'Em andamento' : 'Concluído'}
+              {projeto.acf.status === 'concluido' ? <CheckCircle size={12} /> : <Loader size={12} />}
+              {projeto.acf.status === 'ativo' ? 'Em andamento' : projeto.acf.status === 'concluido' ? 'Concluído' : 'Pausado'}
             </span>
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--cinza-medio)' }}>
               <Calendar size={12} />
-              <span style={{ fontSize: '13px', fontFamily: 'var(--font-primary)' }}>Desde {projeto.ano}</span>
+              <span style={{ fontSize: '13px', fontFamily: 'var(--font-primary)' }}>Desde {projeto.acf.ano_inicio}</span>
             </div>
           </div>
 
           <h1 className="text-section" style={{ color: 'var(--white)', marginBottom: '20px' }}>
-            {projeto.titulo}
+            {projeto.title.rendered}
           </h1>
 
           <p className="text-body" style={{ color: 'var(--cinza-texto)', lineHeight: 1.8, marginBottom: '32px' }}>
-            {projeto.descricaoCompleta}
+            {projeto.acf.descricao_completa || projeto.acf.resumo}
           </p>
 
           {/* Partners */}
@@ -114,7 +128,7 @@ export default function ProjetoDetalhe() {
               Parceiros deste projeto
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-              {projeto.parceiros.map((p) => (
+              {nomeParceiros.map((p) => (
                 <span
                   key={p}
                   style={{
@@ -135,7 +149,7 @@ export default function ProjetoDetalhe() {
           </div>
 
           {/* Gallery */}
-          {projeto.galeria && projeto.galeria.length > 0 && (
+          {galeria.length > 0 && (
             <div style={{ marginTop: '32px' }}>
               <h2
                 style={{
@@ -151,10 +165,10 @@ export default function ProjetoDetalhe() {
                 Galeria
               </h2>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
-                {projeto.galeria.map((img, i) => (
+                {galeria.map((gImg, i) => (
                   <div key={i} style={{ borderRadius: 'var(--radius-md)', overflow: 'hidden', aspectRatio: '4/3' }}>
                     <ImageWithFallback
-                      src={img}
+                      src={gImg}
                       alt={`Galeria ${i + 1}`}
                       style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                     />

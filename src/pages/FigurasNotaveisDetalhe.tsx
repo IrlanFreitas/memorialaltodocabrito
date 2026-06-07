@@ -2,14 +2,22 @@ import React from 'react'
 import { useParams, Link } from 'react-router'
 import { motion } from 'motion/react'
 import { ArrowLeft } from 'lucide-react'
-import { figurasNotaveis } from '../data/mockData'
 import { ImageWithFallback } from '../figma/ImageWithFallback'
+import { useFiguraDetalhe } from '../hooks/useFiguras'
 
 export default function FigurasNotaveisDetalhe() {
   const { id } = useParams()
-  const figura = figurasNotaveis.find((f) => f.id === id)
+  const { data: wpFigura, isLoading } = useFiguraDetalhe(id ?? '')
 
-  if (!figura) {
+  if (isLoading) {
+    return (
+      <div style={{ backgroundColor: 'var(--preto)', minHeight: '100vh', paddingTop: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ color: 'var(--laranja)', fontFamily: 'var(--font-primary)', fontSize: '16px' }}>Carregando...</p>
+      </div>
+    )
+  }
+
+  if (!wpFigura) {
     return (
       <div
         style={{
@@ -41,6 +49,10 @@ export default function FigurasNotaveisDetalhe() {
       </div>
     )
   }
+
+  const foto = wpFigura._embedded?.['wp:featuredmedia']?.[0]?.source_url
+    ?? wpFigura.acf.foto?.url
+    ?? ''
 
   return (
     <div style={{ backgroundColor: 'var(--preto)', minHeight: '100vh', paddingTop: '80px' }}>
@@ -108,8 +120,8 @@ export default function FigurasNotaveisDetalhe() {
               }}
             >
               <ImageWithFallback
-                src={figura.foto}
-                alt={figura.nome}
+                src={foto}
+                alt={wpFigura.title.rendered}
                 style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
               />
             </div>
@@ -128,30 +140,32 @@ export default function FigurasNotaveisDetalhe() {
                   letterSpacing: '0.04em',
                 }}
               >
-                {figura.categoria}
+                {wpFigura.acf.area_atuacao}
               </span>
               <h1
                 className="text-section"
                 style={{ color: 'var(--white)', marginBottom: '4px' }}
               >
-                {figura.nome}
+                {wpFigura.title.rendered}
               </h1>
               <p style={{ fontSize: '14px', color: 'var(--cinza-medio)', fontFamily: 'var(--font-primary)' }}>
-                {figura.periodo}
+                {wpFigura.acf.periodo}
               </p>
-              <p
-                style={{
-                  marginTop: '8px',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  color: 'var(--laranja)',
-                  fontFamily: 'var(--font-primary)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.06em',
-                }}
-              >
-                {figura.contribuicao}
-              </p>
+              {wpFigura.acf.apelido && (
+                <p
+                  style={{
+                    marginTop: '8px',
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    color: 'var(--laranja)',
+                    fontFamily: 'var(--font-primary)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.06em',
+                  }}
+                >
+                  {wpFigura.acf.apelido}
+                </p>
+              )}
             </div>
           </div>
 
@@ -174,7 +188,7 @@ export default function FigurasNotaveisDetalhe() {
               className="text-body"
               style={{ color: 'var(--cinza-texto)', lineHeight: 1.8 }}
             >
-              {figura.bio}
+              {wpFigura.acf.bio}
             </p>
           </div>
         </motion.div>

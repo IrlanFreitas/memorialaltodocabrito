@@ -2,12 +2,16 @@ import React from 'react'
 import { Link } from 'react-router'
 import { motion } from 'motion/react'
 import { ArrowRight, CheckCircle, Loader } from 'lucide-react'
-import { projetos, parceiros } from '../data/mockData'
 import { ImageWithFallback } from '../figma/ImageWithFallback'
 import { BotaoExplore } from './BotaoExplore'
+import { useProjetos } from '../hooks/useProjetos'
+import { useOpcoes } from '../hooks/useOpcoes'
 
 export default function ProjetosSection() {
-  const destaque = projetos.slice(0, 3)
+  const { data: projetosData } = useProjetos()
+  const { data: opcoes } = useOpcoes()
+  const destaque = (projetosData ?? []).filter((p) => p.acf.destaque).slice(0, 3)
+  const parceiros = opcoes?.parceiros ?? []
 
   return (
     <section
@@ -81,7 +85,12 @@ export default function ProjetosSection() {
           }}
           className="sm:grid-cols-2 lg:grid-cols-3"
         >
-          {destaque.map((projeto, i) => (
+          {destaque.map((projeto, i) => {
+            const img = projeto._embedded?.['wp:featuredmedia']?.[0]?.source_url
+              ?? projeto.acf.imagem_capa?.url
+              ?? ''
+            const nomeParceiros = (projeto.acf.parceiros ?? []).map((p) => p.nome)
+            return (
             <motion.div
               key={projeto.id}
               initial={{ opacity: 0, y: 28 }}
@@ -94,7 +103,7 @@ export default function ProjetosSection() {
               }}
             >
               <Link
-                to={`/projetos/${projeto.id}`}
+                to={`/projetos/${projeto.slug}`}
                 style={{ textDecoration: 'none', display: 'block', height: '100%' }}
               >
                 <motion.article
@@ -125,8 +134,8 @@ export default function ProjetosSection() {
                       style={{ width: '100%', height: '100%' }}
                     >
                       <ImageWithFallback
-                        src={projeto.imagem}
-                        alt={projeto.titulo}
+                        src={img}
+                        alt={projeto.title.rendered}
                         style={{
                           width: '100%',
                           height: '100%',
@@ -142,9 +151,9 @@ export default function ProjetosSection() {
                         top: '10px',
                         left: '10px',
                         backgroundColor:
-                          projeto.status === 'em_andamento'
+                          projeto.acf.status === 'ativo'
                             ? 'rgba(255,157,0,0.85)'
-                            : projeto.status === 'concluido'
+                            : projeto.acf.status === 'concluido'
                               ? 'rgba(34,197,94,0.85)'
                               : 'rgba(99,102,241,0.85)',
                         borderRadius: 'var(--radius-full)',
@@ -154,7 +163,7 @@ export default function ProjetosSection() {
                         gap: '4px',
                       }}
                     >
-                      {projeto.status === 'concluido' ? (
+                      {projeto.acf.status === 'concluido' ? (
                         <CheckCircle size={10} style={{ color: 'white' }} />
                       ) : (
                         <Loader size={10} style={{ color: 'white' }} />
@@ -164,17 +173,17 @@ export default function ProjetosSection() {
                           fontSize: '10px',
                           fontWeight: 700,
                           color:
-                            projeto.status === 'em_andamento' ? 'var(--preto)' : 'white',
+                            projeto.acf.status === 'ativo' ? 'var(--preto)' : 'white',
                           fontFamily: 'var(--font-primary)',
                           textTransform: 'uppercase',
                           letterSpacing: '0.05em',
                         }}
                       >
-                        {projeto.status === 'em_andamento'
+                        {projeto.acf.status === 'ativo'
                           ? 'Em andamento'
-                          : projeto.status === 'concluido'
+                          : projeto.acf.status === 'concluido'
                             ? 'Concluído'
-                            : 'Planejado'}
+                            : 'Pausado'}
                       </span>
                     </div>
                   </div>
@@ -196,7 +205,7 @@ export default function ProjetosSection() {
                           fontFamily: 'var(--font-primary)',
                         }}
                       >
-                        Desde {projeto.ano}
+                        Desde {projeto.acf.ano_inicio}
                       </span>
                     </div>
 
@@ -209,7 +218,7 @@ export default function ProjetosSection() {
                         flex: 1,
                       }}
                     >
-                      {projeto.titulo}
+                      {projeto.title.rendered}
                     </h3>
 
                     <p
@@ -225,12 +234,12 @@ export default function ProjetosSection() {
                         overflow: 'hidden',
                       }}
                     >
-                      {projeto.descricao}
+                      {projeto.acf.resumo}
                     </p>
 
                     {/* Partners chips */}
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '12px' }}>
-                      {projeto.parceiros.slice(0, 3).map((p) => (
+                      {nomeParceiros.slice(0, 3).map((p) => (
                         <span
                           key={p}
                           style={{
@@ -247,7 +256,7 @@ export default function ProjetosSection() {
                           {p}
                         </span>
                       ))}
-                      {projeto.parceiros.length > 3 && (
+                      {nomeParceiros.length > 3 && (
                         <span
                           style={{
                             fontSize: '10px',
@@ -257,7 +266,7 @@ export default function ProjetosSection() {
                             padding: '2px 4px',
                           }}
                         >
-                          +{projeto.parceiros.length - 3}
+                          +{nomeParceiros.length - 3}
                         </span>
                       )}
                     </div>
@@ -279,7 +288,8 @@ export default function ProjetosSection() {
                 </motion.article>
               </Link>
             </motion.div>
-          ))}
+            )
+          })}
         </div>
 
         {/* Partners section */}
@@ -318,9 +328,9 @@ export default function ProjetosSection() {
             }}
             className="sm:grid-cols-5 lg:grid-cols-7"
           >
-            {parceiros.map((p, i) => (
+            {parceiros.map((p: { nome: string }, i: number) => (
               <motion.div
-                key={p.id}
+                key={p.nome || i}
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
@@ -359,16 +369,6 @@ export default function ProjetosSection() {
                   }}
                 >
                   {p.nome}
-                </span>
-                <span
-                  style={{
-                    fontSize: '8px',
-                    color: 'var(--cinza-borda)',
-                    fontFamily: 'var(--font-primary)',
-                    marginTop: '2px',
-                  }}
-                >
-                  {p.categoria}
                 </span>
               </motion.div>
             ))}

@@ -2,21 +2,27 @@ import React, { useState } from 'react'
 import { Link } from 'react-router'
 import { motion } from 'motion/react'
 import { Search, ArrowRight } from 'lucide-react'
-import { figurasNotaveis } from '../data/mockData'
 import { ImageWithFallback } from '../figma/ImageWithFallback'
+import { useFiguras } from '../hooks/useFiguras'
 
-const categorias = ['Todas', 'Liderança', 'Educação', 'Cultura', 'Saúde', 'Memória', 'Juventude']
+const categorias = ['Todas', 'cultura', 'educacao', 'politica', 'religiao', 'esporte', 'comercio', 'saude', 'historia', 'outro']
+const categoriaLabel: Record<string, string> = {
+  cultura: 'Cultura', educacao: 'Educação', politica: 'Política',
+  religiao: 'Religião', esporte: 'Esporte', comercio: 'Comércio',
+  saude: 'Saúde', historia: 'História', outro: 'Outro',
+}
 
 export default function FigurasNotaveisPage() {
   const [filtro, setFiltro] = useState('Todas')
   const [busca, setBusca] = useState('')
+  const { data, isLoading } = useFiguras()
 
-  const filtered = figurasNotaveis.filter((f) => {
-    const matchCat = filtro === 'Todas' || f.categoria === filtro
+  const filtered = (data ?? []).filter((f) => {
+    const matchCat = filtro === 'Todas' || f.acf.area_atuacao === filtro
     const matchBusca =
       !busca ||
-      f.nome.toLowerCase().includes(busca.toLowerCase()) ||
-      f.bio.toLowerCase().includes(busca.toLowerCase())
+      f.title.rendered.toLowerCase().includes(busca.toLowerCase()) ||
+      (f.acf.bio ?? '').toLowerCase().includes(busca.toLowerCase())
     return matchCat && matchBusca
   })
 
@@ -104,7 +110,7 @@ export default function FigurasNotaveisPage() {
                 transition: 'all 200ms',
               }}
             >
-              {cat}
+              {cat === 'Todas' ? 'Todas' : (categoriaLabel[cat] ?? cat)}
             </button>
           ))}
         </div>
@@ -114,14 +120,23 @@ export default function FigurasNotaveisPage() {
           style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: '16px' }}
           className="sm:grid-cols-2 lg:grid-cols-3"
         >
-          {filtered.map((figura, i) => (
+          {isLoading && (
+            <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '40px 0', color: 'var(--cinza-medio)', fontFamily: 'var(--font-primary)' }}>
+              Carregando...
+            </div>
+          )}
+          {filtered.map((figura, i) => {
+            const foto = figura._embedded?.['wp:featuredmedia']?.[0]?.source_url
+              ?? figura.acf.foto?.url
+              ?? ''
+            return (
             <motion.div
               key={figura.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: i * 0.06 }}
             >
-              <Link to={`/figuras-notaveis/${figura.id}`} style={{ textDecoration: 'none' }}>
+              <Link to={`/figuras-notaveis/${figura.slug}`} style={{ textDecoration: 'none' }}>
                 <motion.article
                   whileHover={{ y: -4 }}
                   transition={{ duration: 0.3 }}
@@ -149,8 +164,8 @@ export default function FigurasNotaveisPage() {
                     }}
                   >
                     <ImageWithFallback
-                      src={figura.foto}
-                      alt={figura.nome}
+                      src={foto}
+                      alt={figura.title.rendered}
                       style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                     />
                   </div>
@@ -168,7 +183,7 @@ export default function FigurasNotaveisPage() {
                         marginBottom: '6px',
                       }}
                     >
-                      {figura.categoria}
+                      {categoriaLabel[figura.acf.area_atuacao] ?? figura.acf.area_atuacao}
                     </span>
                     <h3
                       style={{
@@ -180,7 +195,7 @@ export default function FigurasNotaveisPage() {
                         marginBottom: '4px',
                       }}
                     >
-                      {figura.nome}
+                      {figura.title.rendered}
                     </h3>
                     <p
                       style={{
@@ -190,7 +205,7 @@ export default function FigurasNotaveisPage() {
                         marginBottom: '8px',
                       }}
                     >
-                      {figura.periodo}
+                      {figura.acf.periodo}
                     </p>
                     <p
                       style={{
@@ -204,7 +219,7 @@ export default function FigurasNotaveisPage() {
                         overflow: 'hidden',
                       }}
                     >
-                      {figura.bio}
+                      {figura.acf.bio}
                     </p>
                     <span
                       style={{
@@ -224,7 +239,8 @@ export default function FigurasNotaveisPage() {
                 </motion.article>
               </Link>
             </motion.div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </div>

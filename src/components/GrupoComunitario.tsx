@@ -2,11 +2,19 @@ import React from 'react'
 import { Link } from 'react-router'
 import { motion } from 'motion/react'
 import { Heart, Target, Eye, ArrowRight } from 'lucide-react'
-import { grupoInfo } from '../data/mockData'
 import { ImageWithFallback } from '../figma/ImageWithFallback'
 import { BotaoExplore } from './BotaoExplore'
+import { useOpcoes } from '../hooks/useOpcoes'
+
+const VISAO_PADRAO = 'Ser reconhecido como referência na preservação da memória e história das comunidades periféricas de Salvador, contribuindo para a valorização da cultura e identidade local.'
+const VALORES_PADRAO = ['Memória coletiva', 'Pertencimento', 'Resistência cultural', 'Inclusão comunitária', 'Educação popular']
 
 export default function GrupoComunitario() {
+  const { data } = useOpcoes()
+  const descricao = data?.grupo_texto ?? ''
+  const missao = data?.grupo_missao ?? ''
+  const foto = data?.historia_imagem?.url ?? ''
+
   return (
     <section
       style={{
@@ -61,7 +69,7 @@ export default function GrupoComunitario() {
             style={{ borderRadius: 'var(--radius-xl)', overflow: 'hidden', position: 'relative' }}
           >
             <ImageWithFallback
-              src={grupoInfo.foto}
+              src={foto}
               alt="Equipe do Grupo Comunitário Memorial Alto do Cabrito"
               style={{
                 width: '100%',
@@ -95,7 +103,7 @@ export default function GrupoComunitario() {
                 lineHeight: 1.7,
               }}
             >
-              {grupoInfo.descricao}
+              {descricao}
             </p>
 
             {/* Mission / Vision */}
@@ -136,7 +144,7 @@ export default function GrupoComunitario() {
                       lineHeight: 1.5,
                     }}
                   >
-                    {grupoInfo.missao}
+                    {missao}
                   </p>
                 </div>
               </div>
@@ -177,7 +185,7 @@ export default function GrupoComunitario() {
                       lineHeight: 1.5,
                     }}
                   >
-                    {grupoInfo.visao}
+                    {VISAO_PADRAO}
                   </p>
                 </div>
               </div>
@@ -203,7 +211,7 @@ export default function GrupoComunitario() {
                 Valores
               </p>
               <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                {grupoInfo.valores.map((v) => (
+                {VALORES_PADRAO.map((v) => (
                   <li
                     key={v}
                     style={{

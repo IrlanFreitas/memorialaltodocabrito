@@ -1,10 +1,16 @@
 import React from 'react'
 import { Link } from 'react-router'
 import { Instagram, Youtube, MapPin, Mail, ExternalLink } from 'lucide-react'
-import { parceiros } from '../data/mockData'
+import { useOpcoes } from '../hooks/useOpcoes'
 
 export default function Footer() {
   const year = new Date().getFullYear()
+  const { data } = useOpcoes()
+  const parceiros = data?.parceiros ?? []
+  const instagramUrl = data?.instagram_url || 'https://instagram.com'
+  const youtubeUrl = data?.youtube_url || 'https://youtube.com'
+  const email = data?.email || 'contato@memorialaltodocabrito.org'
+  const endereco = data?.endereco || 'Alto do Cabrito, Salvador, Bahia, Brasil'
 
   return (
     <footer
@@ -52,7 +58,7 @@ export default function Footer() {
             </p>
             <div style={{ display: 'flex', gap: '12px' }}>
               <a
-                href="https://instagram.com"
+                href={instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram do Memorial"
@@ -80,7 +86,7 @@ export default function Footer() {
                 <Instagram size={18} />
               </a>
               <a
-                href="https://youtube.com"
+                href={youtubeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="YouTube do Memorial"
@@ -130,7 +136,7 @@ export default function Footer() {
                 { to: '/historia', label: 'Nossa História' },
                 { to: '/acervo', label: 'Acervo Digital' },
                 { to: '/figuras-notaveis', label: 'Figuras Notáveis' },
-                { to: '/hemeroteca', label: 'Hemeroteca' },
+                { to: '/midia', label: 'Mídia' },
                 { to: '/projetos', label: 'Projetos' },
                 { to: '/noticias', label: 'Notícias' },
               ].map(({ to, label }) => (
@@ -247,10 +253,7 @@ export default function Footer() {
                   size={16}
                   style={{ color: 'var(--laranja)', flexShrink: 0, marginTop: '2px' }}
                 />
-                <span>
-                  Alto do Cabrito<br />
-                  Salvador, Bahia, Brasil
-                </span>
+                <span>{endereco}</span>
               </div>
               <div
                 style={{
@@ -264,7 +267,7 @@ export default function Footer() {
               >
                 <Mail size={16} style={{ color: 'var(--laranja)', flexShrink: 0 }} />
                 <a
-                  href="mailto:contato@memorialaltodocabrito.org"
+                  href={`mailto:${email}`}
                   style={{
                     color: 'var(--cinza-texto)',
                     textDecoration: 'none',
@@ -273,7 +276,7 @@ export default function Footer() {
                   onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--laranja)')}
                   onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--cinza-texto)')}
                 >
-                  contato@memorialaltodocabrito.org
+                  {email}
                 </a>
               </div>
             </div>
@@ -312,9 +315,9 @@ export default function Footer() {
             }}
             className="sm:grid-cols-5 lg:grid-cols-7"
           >
-            {parceiros.map((p) => (
+            {parceiros.map((p: { nome: string; url?: string }, i: number) => (
               <div
-                key={p.id}
+                key={p.url || p.nome || i}
                 title={p.nome}
                 style={{
                   padding: '10px 8px',

@@ -2,21 +2,28 @@ import React from 'react'
 import { Link } from 'react-router'
 import { motion } from 'motion/react'
 import { Calendar, ArrowRight, Clock } from 'lucide-react'
-import { noticias } from '../data/mockData'
 import { ImageWithFallback } from '../figma/ImageWithFallback'
 import { BotaoExplore } from './BotaoExplore'
+import { useNoticias } from '../hooks/useNoticias'
 
 function formatDate(iso: string) {
+  if (!iso) return ''
   const d = new Date(iso)
   return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })
 }
 
 function isPast(iso: string) {
+  if (!iso) return false
   return new Date(iso) < new Date()
 }
 
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]*>/g, '')
+}
+
 export default function NoticiasSection() {
-  const destaque = noticias.slice(0, 4)
+  const { data } = useNoticias()
+  const destaque = (data ?? []).slice(0, 4)
 
   return (
     <section
@@ -145,7 +152,12 @@ export default function NoticiasSection() {
           className="sm:grid-cols-2 lg:grid-cols-2"
         >
           {destaque.map((noticia, i) => {
-            const past = isPast(noticia.data)
+            const dataEvento = noticia.acf.data_evento || noticia.date
+            const past = isPast(dataEvento)
+            const img = noticia._embedded?.['wp:featuredmedia']?.[0]?.source_url
+              ?? noticia.acf.imagem_capa?.url
+              ?? ''
+            const excerptText = stripHtml(noticia.excerpt.rendered)
             return (
               <motion.div
                 key={noticia.id}
@@ -159,7 +171,7 @@ export default function NoticiasSection() {
                 }}
               >
                 <Link
-                  to={`/noticias/${noticia.id}`}
+                  to={`/noticias/${noticia.slug}`}
                   style={{ textDecoration: 'none', display: 'block' }}
                 >
                   <motion.article
@@ -194,8 +206,8 @@ export default function NoticiasSection() {
                         style={{ width: '100%', height: '100%' }}
                       >
                         <ImageWithFallback
-                          src={noticia.imagem}
-                          alt={noticia.titulo}
+                          src={img}
+                          alt={noticia.title.rendered}
                           style={{
                             width: '100%',
                             height: '100%',
@@ -266,7 +278,7 @@ export default function NoticiasSection() {
                             fontFamily: 'var(--font-primary)',
                           }}
                         >
-                          {noticia.categoria}
+                          {noticia.acf.categoria}
                         </span>
                       </div>
                     </div>
@@ -294,7 +306,7 @@ export default function NoticiasSection() {
                             fontWeight: 500,
                           }}
                         >
-                          {formatDate(noticia.data)}
+                          {formatDate(dataEvento)}
                         </span>
                       </div>
 
@@ -314,7 +326,7 @@ export default function NoticiasSection() {
                           overflow: 'hidden',
                         }}
                       >
-                        {noticia.titulo}
+                        {noticia.title.rendered}
                       </h3>
 
                       {/* Excerpt */}
@@ -333,8 +345,8 @@ export default function NoticiasSection() {
                         }}
                       >
                         {past
-                          ? `Resumo: ${noticia.excerpt}`
-                          : noticia.excerpt}
+                          ? `Resumo: ${noticia.acf.resumo_passado || excerptText}`
+                          : excerptText}
                       </p>
 
                       <span

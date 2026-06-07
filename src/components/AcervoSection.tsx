@@ -2,9 +2,9 @@ import React from 'react'
 import { Link } from 'react-router'
 import { motion } from 'motion/react'
 import { Calendar, Tag, ArrowRight } from 'lucide-react'
-import { acervoItems } from '../data/mockData'
 import { ImageWithFallback } from '../figma/ImageWithFallback'
 import { BotaoAcervo } from './BotaoAcervo'
+import { useAcervo } from '../hooks/useAcervo'
 
 const fadeUp = {
   initial: { opacity: 0, y: 28 },
@@ -13,7 +13,8 @@ const fadeUp = {
 }
 
 export default function AcervoSection() {
-  const destaque = acervoItems.slice(0, 3)
+  const { data } = useAcervo()
+  const destaque = (data ?? []).slice(0, 3)
 
   return (
     <section
@@ -67,7 +68,11 @@ export default function AcervoSection() {
           }}
           className="sm:grid-cols-2 lg:grid-cols-3"
         >
-          {destaque.map((item, i) => (
+          {destaque.map((item, i) => {
+            const img = item._embedded?.['wp:featuredmedia']?.[0]?.source_url
+              ?? item.acf.imagem_principal?.url
+              ?? ''
+            return (
             <motion.div
               key={item.id}
               initial={{ opacity: 0, y: 28 }}
@@ -109,8 +114,8 @@ export default function AcervoSection() {
                       style={{ width: '100%', height: '100%' }}
                     >
                       <ImageWithFallback
-                        src={item.imagem}
-                        alt={item.titulo}
+                        src={img}
+                        alt={item.title.rendered}
                         style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                       />
                     </motion.div>
@@ -139,7 +144,7 @@ export default function AcervoSection() {
                           letterSpacing: '0.05em',
                         }}
                       >
-                        {item.categoria}
+                        {item.acf.categoria}
                       </span>
                     </div>
                   </div>
@@ -154,7 +159,7 @@ export default function AcervoSection() {
                         lineHeight: 1.3,
                       }}
                     >
-                      {item.titulo}
+                      {item.title.rendered}
                     </h3>
                     <p
                       style={{
@@ -169,7 +174,7 @@ export default function AcervoSection() {
                         overflow: 'hidden',
                       }}
                     >
-                      {item.descricao}
+                      {item.acf.descricao}
                     </p>
                     <div
                       style={{
@@ -194,7 +199,7 @@ export default function AcervoSection() {
                             fontWeight: 500,
                           }}
                         >
-                          {item.periodo}
+                          {item.acf.data_aproximada || item.acf.data_exata}
                         </span>
                       </div>
                       <span
@@ -215,7 +220,8 @@ export default function AcervoSection() {
                 </motion.article>
               </Link>
             </motion.div>
-          ))}
+            )
+          })}
         </div>
 
         {/* Mobile bottom CTA */}

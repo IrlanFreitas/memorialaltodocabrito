@@ -1,22 +1,36 @@
 import React from 'react'
 import { useParams, Link } from 'react-router'
 import { motion } from 'motion/react'
-import { ArrowLeft, Calendar, Clock, User, Tag } from 'lucide-react'
-import { noticias } from '../data/mockData'
+import { ArrowLeft, Calendar, Clock, Tag } from 'lucide-react'
 import { ImageWithFallback } from '../figma/ImageWithFallback'
+import { useNoticiaDetalhe } from '../hooks/useNoticias'
 
 function formatDate(iso: string) {
+  if (!iso) return ''
   const d = new Date(iso)
   return d.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })
 }
 
 function isPast(iso: string) {
+  if (!iso) return false
   return new Date(iso) < new Date()
+}
+
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]*>/g, '')
 }
 
 export default function NoticiaDetalhe() {
   const { id } = useParams()
-  const noticia = noticias.find((n) => n.id === id)
+  const { data: noticia, isLoading } = useNoticiaDetalhe(id ?? '')
+
+  if (isLoading) {
+    return (
+      <div style={{ backgroundColor: 'var(--preto)', minHeight: '100vh', paddingTop: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ color: 'var(--laranja)', fontFamily: 'var(--font-primary)', fontSize: '16px' }}>Carregando...</p>
+      </div>
+    )
+  }
 
   if (!noticia) {
     return (
@@ -29,7 +43,13 @@ export default function NoticiaDetalhe() {
     )
   }
 
-  const past = isPast(noticia.data)
+  const dataEvento = noticia.acf.data_evento || noticia.date
+  const past = isPast(dataEvento)
+  const img = noticia._embedded?.['wp:featuredmedia']?.[0]?.source_url
+    ?? noticia.acf.imagem_capa?.url
+    ?? ''
+  const excerptText = stripHtml(noticia.excerpt.rendered)
+  const conteudoHtml = noticia.content.rendered
 
   return (
     <div style={{ backgroundColor: 'var(--preto)', minHeight: '100vh', paddingTop: '80px' }}>
@@ -78,8 +98,8 @@ export default function NoticiaDetalhe() {
           style={{ borderRadius: 'var(--radius-xl)', overflow: 'hidden', marginBottom: '32px', aspectRatio: '16/9' }}
         >
           <ImageWithFallback
-            src={noticia.imagem}
-            alt={noticia.titulo}
+            src={img}
+            alt={noticia.title.rendered}
             style={{
               width: '100%',
               height: '100%',
@@ -112,16 +132,12 @@ export default function NoticiaDetalhe() {
                   fontWeight: 500,
                 }}
               >
-                {formatDate(noticia.data)}
+                {formatDate(dataEvento)}
               </span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--cinza-medio)' }}>
               <Tag size={12} />
-              <span style={{ fontSize: '13px', fontFamily: 'var(--font-primary)' }}>{noticia.categoria}</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--cinza-medio)' }}>
-              <User size={12} />
-              <span style={{ fontSize: '13px', fontFamily: 'var(--font-primary)' }}>{noticia.autor}</span>
+              <span style={{ fontSize: '13px', fontFamily: 'var(--font-primary)' }}>{noticia.acf.categoria}</span>
             </div>
           </div>
 
@@ -129,7 +145,7 @@ export default function NoticiaDetalhe() {
             className="text-section"
             style={{ color: past ? 'var(--cinza-texto)' : 'var(--white)', marginBottom: '16px', lineHeight: 1.3 }}
           >
-            {noticia.titulo}
+            {noticia.title.rendered}
           </h1>
 
           {/* Lead */}
@@ -145,7 +161,7 @@ export default function NoticiaDetalhe() {
               paddingLeft: '16px',
             }}
           >
-            {noticia.excerpt}
+            {excerptText}
           </p>
 
           <div
@@ -156,18 +172,22 @@ export default function NoticiaDetalhe() {
             }}
           />
 
-          {/* Body placeholder */}
-          <p
-            className="text-body"
-            style={{ color: 'var(--cinza-texto)', lineHeight: 1.8, marginBottom: '16px' }}
-          >
-            {past
-              ? `Este evento aconteceu em ${formatDate(noticia.data)}. ${noticia.excerpt} O registro completo deste acontecimento está disponível no acervo do Memorial Alto do Cabrito.`
-              : `Confira os detalhes sobre este próximo evento: ${noticia.excerpt} Fique ligado nas nossas redes sociais para mais informações e atualizações.`}
-          </p>
-          <p className="text-body" style={{ color: 'var(--cinza-texto)', lineHeight: 1.8 }}>
-            Para mais informações, entre em contato com o Grupo Comunitário Memorial Alto do Cabrito através das nossas redes sociais ou por e-mail.
-          </p>
+          {conteudoHtml ? (
+            <div
+              className="text-body"
+              style={{ color: 'var(--cinza-texto)', lineHeight: 1.8 }}
+              dangerouslySetInnerHTML={{ __html: conteudoHtml }}
+            />
+          ) : (
+            <p
+              className="text-body"
+              style={{ color: 'var(--cinza-texto)', lineHeight: 1.8, marginBottom: '16px' }}
+            >
+              {past
+                ? `Este evento aconteceu em ${formatDate(dataEvento)}. ${excerptText}`
+                : `Confira os detalhes sobre este próximo evento: ${excerptText}`}
+            </p>
+          )}
         </motion.div>
       </div>
     </div>

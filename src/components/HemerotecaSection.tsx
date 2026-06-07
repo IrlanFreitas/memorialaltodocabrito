@@ -2,12 +2,13 @@ import React from 'react'
 import { Link } from 'react-router'
 import { motion } from 'motion/react'
 import { Newspaper, ArrowRight, Calendar } from 'lucide-react'
-import { hemerotecaItems } from '../data/mockData'
 import { ImageWithFallback } from '../figma/ImageWithFallback'
 import { BotaoExplore } from './BotaoExplore'
+import { useHemeroteca } from '../hooks/useHemeroteca'
 
 export default function HemerotecaSection() {
-  const destaque = hemerotecaItems.slice(0, 4)
+  const { data } = useHemeroteca()
+  const destaque = (data ?? []).slice(0, 4)
 
   return (
     <section
@@ -80,7 +81,11 @@ export default function HemerotecaSection() {
           }}
           className="sm:grid-cols-2 lg:grid-cols-4"
         >
-          {destaque.map((item, i) => (
+          {destaque.map((item, i) => {
+            const img = item._embedded?.['wp:featuredmedia']?.[0]?.source_url
+              ?? item.acf.imagem_recorte?.url
+              ?? ''
+            return (
             <motion.div
               key={item.id}
               initial={{ opacity: 0, y: 28 }}
@@ -124,8 +129,8 @@ export default function HemerotecaSection() {
                       style={{ width: '100%', height: '100%' }}
                     >
                       <ImageWithFallback
-                        src={item.imagem}
-                        alt={item.titulo}
+                        src={img}
+                        alt={item.title.rendered}
                         style={{
                           width: '100%',
                           height: '100%',
@@ -175,7 +180,7 @@ export default function HemerotecaSection() {
                           letterSpacing: '0.05em',
                         }}
                       >
-                        {item.veiculo}
+                        {item.acf.veiculo}
                       </span>
                       <span style={{ color: 'var(--cinza-borda)' }}>·</span>
                       <div
@@ -193,7 +198,7 @@ export default function HemerotecaSection() {
                             fontFamily: 'var(--font-primary)',
                           }}
                         >
-                          {item.data}
+                          {item.acf.data_publicacao}
                         </span>
                       </div>
                     </div>
@@ -213,7 +218,7 @@ export default function HemerotecaSection() {
                         overflow: 'hidden',
                       }}
                     >
-                      {item.titulo}
+                      {item.title.rendered}
                     </h3>
 
                     <span
@@ -233,7 +238,8 @@ export default function HemerotecaSection() {
                 </motion.article>
               </Link>
             </motion.div>
-          ))}
+            )
+          })}
         </div>
 
         {/* CTA */}

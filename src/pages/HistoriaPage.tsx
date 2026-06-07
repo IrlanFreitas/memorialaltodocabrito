@@ -1,22 +1,39 @@
 import React from 'react'
 import { Link } from 'react-router'
 import { motion } from 'motion/react'
-import { BookOpen } from 'lucide-react'
+import { BookOpen, ArrowRight, Loader } from 'lucide-react'
 import { BotaoExplore } from '../components/BotaoExplore'
-
-const timeline = [
-  { ano: '1960s', titulo: 'Os Primeiros Moradores', descricao: 'Famílias oriundas do interior da Bahia e de outros estados chegam às encostas do Alto do Cabrito em busca de oportunidades na capital. As primeiras habitações são construídas com materiais simples, mas com uma solidez cultural e comunitária profunda.' },
-  { ano: '1970s', titulo: 'Consolidação do Bairro', descricao: 'O Alto do Cabrito se consolida como comunidade reconhecida, com o surgimento de ruas, comércios locais e a primeira escola improvisada. A identidade periférica começa a se formar com traços únicos.' },
-  { ano: '1980', titulo: 'Fundação da Associação de Moradores', descricao: 'Em 14 de março de 1980, é fundada oficialmente a Associação de Moradores do Alto do Cabrito, marco fundamental na organização política e social da comunidade.' },
-  { ano: '1985', titulo: 'Escola Comunitária', descricao: 'A Escola Comunitária do Alto do Cabrito é fundada com recursos dos próprios moradores, oferecendo educação de qualidade para crianças do bairro que antes precisavam se deslocar longas distâncias.' },
-  { ano: '1990s', titulo: 'Infraestrutura e Conquistas', descricao: 'Após anos de mobilização popular, o bairro conquista melhorias significativas de infraestrutura: pavimentação de ruas principais, ampliação do saneamento básico e acesso regular ao abastecimento de água.' },
-  { ano: '2000s', titulo: 'Reconhecimento Cultural', descricao: 'O Alto do Cabrito ganha visibilidade pela riqueza de suas manifestações culturais — capoeira, festas juninas, música e arte periférica. A identidade local se fortalece e passa a ser celebrada.' },
-  { ano: '2018', titulo: 'Biblioteca Comunitária', descricao: 'Inauguração da Biblioteca Comunitária do Alto do Cabrito, resultado de anos de sonho coletivo. O espaço se torna polo cultural e educacional, com acervo de mais de 3.000 títulos.' },
-  { ano: '2021', titulo: 'Nascimento do Memorial', descricao: 'Um grupo de jovens moradores cria o projeto Memorial Alto do Cabrito, iniciando o trabalho de digitalização e preservação da história, documentos, fotografias e depoimentos da comunidade.' },
-  { ano: '2026', titulo: 'Memorial Online', descricao: 'Lançamento da plataforma digital do Memorial Alto do Cabrito, tornando o acervo histórico acessível para toda a comunidade e para pesquisadores do mundo inteiro.' },
-]
+import { useTimeline } from '../hooks/useTimeline'
+import { timelineMock } from '../data/mockData'
 
 export default function HistoriaPage() {
+  const { data: wpTimeline, isLoading, isError } = useTimeline()
+
+  /** Normaliza dados do WP ou usa mock como fallback */
+  const items = React.useMemo(() => {
+    if (wpTimeline && wpTimeline.length > 0) {
+      return wpTimeline
+        .filter((t) => t.acf?.ativo !== false)
+        .sort((a, b) => (a.acf?.ordem ?? 0) - (b.acf?.ordem ?? 0))
+        .map((t) => ({
+          slug: t.slug,
+          ano: t.acf?.ano ?? String(new Date(t.date).getFullYear()),
+          titulo: t.title.rendered,
+          descricao: t.acf?.descricao ?? t.content.rendered.replace(/<[^>]*>/g, '').slice(0, 200),
+          isLast: false,
+        }))
+    }
+    return timelineMock.map((t) => ({
+      slug: t.slug,
+      ano: t.ano,
+      titulo: t.titulo,
+      descricao: t.descricao,
+      isLast: false,
+    }))
+  }, [wpTimeline])
+
+  const itemsWithLast = items.map((item, i) => ({ ...item, isLast: i === items.length - 1 }))
+
   return (
     <div style={{ backgroundColor: 'var(--preto)', minHeight: '100vh', paddingTop: '80px' }}>
       {/* Header */}
@@ -38,112 +55,180 @@ export default function HistoriaPage() {
               <h1 className="text-section" style={{ color: 'var(--white)' }}>Nossa História</h1>
             </div>
             <p className="text-body" style={{ color: 'var(--cinza-texto)', maxWidth: '560px' }}>
-              Uma breve história do Alto do Cabrito, destacando seus principais marcos, desafios e conquistas, desde a formação da comunidade até os dias atuais.
+              Uma breve história do Alto do Cabrito, destacando seus principais marcos, desafios e conquistas,
+              desde a formação da comunidade até os dias atuais.
             </p>
           </motion.div>
         </div>
       </div>
 
       <div style={{ maxWidth: '800px', margin: '0 auto', padding: '48px 16px' }}>
-        {/* Timeline */}
-        <div style={{ position: 'relative' }}>
-          {/* Timeline line */}
-          <div
-            style={{
-              position: 'absolute',
-              left: '20px',
-              top: 0,
-              bottom: 0,
-              width: '2px',
-              backgroundColor: 'var(--cinza-borda)',
-            }}
-          />
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
-            {timeline.map((item, i) => (
-              <motion.div
-                key={item.ano}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: i * 0.08 }}
-                style={{
-                  display: 'flex',
-                  gap: '32px',
-                  paddingBottom: '40px',
-                  paddingLeft: '52px',
-                  position: 'relative',
-                }}
-              >
-                {/* Dot */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    left: '12px',
-                    top: '4px',
-                    width: '18px',
-                    height: '18px',
-                    borderRadius: 'var(--radius-full)',
-                    backgroundColor: i === timeline.length - 1 ? 'var(--laranja)' : 'var(--preto-soft)',
-                    border: `2px solid ${i === timeline.length - 1 ? 'var(--laranja)' : 'var(--cinza-borda)'}`,
-                    zIndex: 1,
-                  }}
-                />
-
-                <div>
-                  <span
-                    style={{
-                      display: 'inline-block',
-                      fontSize: '12px',
-                      fontWeight: 700,
-                      color: 'var(--laranja)',
-                      fontFamily: 'var(--font-primary)',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.08em',
-                      marginBottom: '6px',
-                    }}
-                  >
-                    {item.ano}
-                  </span>
-                  <h3
-                    style={{
-                      fontSize: '18px',
-                      fontWeight: 700,
-                      color: 'var(--white)',
-                      fontFamily: 'var(--font-primary)',
-                      lineHeight: 1.3,
-                      marginBottom: '8px',
-                    }}
-                  >
-                    {item.titulo}
-                  </h3>
-                  <p
-                    style={{
-                      fontSize: '15px',
-                      color: 'var(--cinza-texto)',
-                      fontFamily: 'var(--font-primary)',
-                      lineHeight: 1.7,
-                    }}
-                  >
-                    {item.descricao}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
+        {/* Loading state */}
+        {isLoading && (
+          <div style={{ display: 'flex', justifyContent: 'center', padding: '48px 0' }}>
+            <Loader size={24} style={{ color: 'var(--laranja)', animation: 'spin 1s linear infinite' }} />
           </div>
-        </div>
+        )}
+
+        {/* Timeline */}
+        {!isLoading && (
+          <div style={{ position: 'relative' }}>
+            {/* Linha vertical */}
+            <div
+              style={{
+                position: 'absolute',
+                left: '20px',
+                top: 0,
+                bottom: 0,
+                width: '2px',
+                backgroundColor: 'var(--cinza-borda)',
+              }}
+            />
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+              {itemsWithLast.map((item, i) => (
+                <motion.div
+                  key={item.slug}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: i * 0.08 }}
+                  style={{
+                    display: 'flex',
+                    gap: '32px',
+                    paddingBottom: '40px',
+                    paddingLeft: '52px',
+                    position: 'relative',
+                  }}
+                >
+                  {/* Dot */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      left: '12px',
+                      top: '4px',
+                      width: '18px',
+                      height: '18px',
+                      borderRadius: 'var(--radius-full)',
+                      backgroundColor: item.isLast ? 'var(--laranja)' : 'var(--preto-soft)',
+                      border: `2px solid ${item.isLast ? 'var(--laranja)' : 'var(--cinza-borda)'}`,
+                      zIndex: 1,
+                      transition: 'all 200ms',
+                    }}
+                  />
+
+                  {/* Card clicável */}
+                  <Link
+                    to={`/historia/${item.slug}`}
+                    style={{ textDecoration: 'none', flex: 1 }}
+                  >
+                    <motion.div
+                      whileHover={{ x: 4 }}
+                      transition={{ duration: 0.2 }}
+                      style={{
+                        padding: '20px 24px',
+                        borderRadius: 'var(--radius-lg)',
+                        border: '1px solid var(--cinza-borda)',
+                        backgroundColor: 'var(--preto-card)',
+                        cursor: 'pointer',
+                        transition: 'border-color 200ms, background-color 200ms',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = 'rgba(255,157,0,0.4)'
+                        e.currentTarget.style.backgroundColor = 'var(--preto-soft)'
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--cinza-borda)'
+                        e.currentTarget.style.backgroundColor = 'var(--preto-card)'
+                      }}
+                    >
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          fontSize: '12px',
+                          fontWeight: 700,
+                          color: 'var(--laranja)',
+                          fontFamily: 'var(--font-primary)',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.08em',
+                          marginBottom: '6px',
+                        }}
+                      >
+                        {item.ano}
+                      </span>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
+                        <div style={{ flex: 1 }}>
+                          <h3
+                            style={{
+                              fontSize: '18px',
+                              fontWeight: 700,
+                              color: 'var(--white)',
+                              fontFamily: 'var(--font-primary)',
+                              lineHeight: 1.3,
+                              marginBottom: '8px',
+                            }}
+                          >
+                            {item.titulo}
+                          </h3>
+                          <p
+                            style={{
+                              fontSize: '15px',
+                              color: 'var(--cinza-texto)',
+                              fontFamily: 'var(--font-primary)',
+                              lineHeight: 1.7,
+                              display: '-webkit-box',
+                              WebkitLineClamp: 3,
+                              WebkitBoxOrient: 'vertical',
+                              overflow: 'hidden',
+                            }}
+                          >
+                            {item.descricao}
+                          </p>
+                        </div>
+                        <span
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '4px',
+                            fontSize: '12px',
+                            fontWeight: 600,
+                            color: 'var(--laranja)',
+                            fontFamily: 'var(--font-primary)',
+                            whiteSpace: 'nowrap',
+                            flexShrink: 0,
+                            marginTop: '22px',
+                          }}
+                        >
+                          Ver mais <ArrowRight size={13} />
+                        </span>
+                      </div>
+                    </motion.div>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          style={{ marginTop: '16px' }}
-        >
-          <BotaoExplore to="/acervo" label="explorar o acervo histórico" />
-        </motion.div>
+        {!isLoading && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            style={{ marginTop: '16px' }}
+          >
+            <BotaoExplore to="/acervo" label="explorar o acervo histórico" />
+          </motion.div>
+        )}
       </div>
+
+      {/* CSS animation for the loader */}
+      <style>{`
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+      `}</style>
     </div>
   )
 }

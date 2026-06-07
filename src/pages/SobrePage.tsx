@@ -2,11 +2,21 @@ import React from 'react'
 import { Link } from 'react-router'
 import { motion } from 'motion/react'
 import { Heart, Target, Eye, Users } from 'lucide-react'
-import { grupoInfo, parceiros } from '../data/mockData'
 import { ImageWithFallback } from '../figma/ImageWithFallback'
 import { BotaoExplore } from '../components/BotaoExplore'
+import { useOpcoes } from '../hooks/useOpcoes'
+
+const VISAO_PADRAO = 'Ser reconhecido como referência na preservação da memória e história das comunidades periféricas de Salvador, contribuindo para a valorização da cultura e identidade local.'
+const VALORES_PADRAO = ['Memória coletiva', 'Pertencimento', 'Resistência cultural', 'Inclusão comunitária', 'Educação popular']
 
 export default function SobrePage() {
+  const { data } = useOpcoes()
+  const fotoGrupo = data?.historia_imagem?.url ?? data?.grupo_membros?.[0]?.foto?.url ?? ''
+  const descricao = data?.grupo_texto ?? ''
+  const missao = data?.grupo_missao ?? ''
+  const membros = data?.grupo_membros ?? []
+  const parceiros = data?.parceiros ?? []
+
   return (
     <div style={{ backgroundColor: 'var(--preto)', minHeight: '100vh', paddingTop: '80px' }}>
       {/* Page header */}
@@ -42,7 +52,7 @@ export default function SobrePage() {
           style={{ borderRadius: 'var(--radius-xl)', overflow: 'hidden', marginBottom: '48px', aspectRatio: '21/9' }}
         >
           <ImageWithFallback
-            src={grupoInfo.foto}
+            src={fotoGrupo}
             alt="Equipe do Grupo Comunitário"
             style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
           />
@@ -72,10 +82,10 @@ export default function SobrePage() {
               Quem somos
             </p>
             <h2 className="text-section" style={{ color: 'var(--white)', marginBottom: '16px' }}>
-              {grupoInfo.nome}
+              Grupo Comunitário Memorial Alto do Cabrito
             </h2>
             <p className="text-body" style={{ color: 'var(--cinza-texto)', lineHeight: 1.8 }}>
-              {grupoInfo.descricao}
+              {descricao}
             </p>
           </motion.div>
 
@@ -112,7 +122,7 @@ export default function SobrePage() {
                   Missão
                 </h3>
                 <p style={{ fontSize: '15px', color: 'var(--cinza-texto)', fontFamily: 'var(--font-primary)', lineHeight: 1.6 }}>
-                  {grupoInfo.missao}
+                  {missao}
                 </p>
               </div>
             </div>
@@ -144,7 +154,7 @@ export default function SobrePage() {
                   Visão
                 </h3>
                 <p style={{ fontSize: '15px', color: 'var(--cinza-texto)', fontFamily: 'var(--font-primary)', lineHeight: 1.6 }}>
-                  {grupoInfo.visao}
+                  {VISAO_PADRAO}
                 </p>
               </div>
             </div>
@@ -176,7 +186,7 @@ export default function SobrePage() {
                 Valores
               </h3>
               <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {grupoInfo.valores.map((v) => (
+                {VALORES_PADRAO.map((v) => (
                   <li
                     key={v}
                     style={{
@@ -234,7 +244,7 @@ export default function SobrePage() {
             style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}
             className="sm:grid-cols-4"
           >
-            {grupoInfo.equipe.map((membro, i) => (
+            {membros.map((membro, i) => (
               <motion.div
                 key={membro.nome}
                 initial={{ opacity: 0, y: 16 }}
@@ -260,7 +270,7 @@ export default function SobrePage() {
                   }}
                 >
                   <ImageWithFallback
-                    src={membro.foto}
+                    src={membro.foto?.url ?? ''}
                     alt={membro.nome}
                     style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                   />
@@ -276,6 +286,11 @@ export default function SobrePage() {
                 >
                   {membro.nome}
                 </p>
+                {membro.papel && (
+                  <p style={{ fontSize: '11px', color: 'var(--cinza-medio)', fontFamily: 'var(--font-primary)', marginTop: '4px' }}>
+                    {membro.papel}
+                  </p>
+                )}
               </motion.div>
             ))}
           </div>

@@ -2,33 +2,38 @@ import React, { useState } from 'react'
 import { Link } from 'react-router'
 import { motion } from 'motion/react'
 import { Calendar, Clock, ArrowRight, Filter } from 'lucide-react'
-import { noticias } from '../data/mockData'
 import { ImageWithFallback } from '../figma/ImageWithFallback'
+import { useNoticias } from '../hooks/useNoticias'
 
 function formatDate(iso: string) {
+  if (!iso) return ''
   const d = new Date(iso)
   return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })
 }
 
 function isPast(iso: string) {
+  if (!iso) return false
   return new Date(iso) < new Date()
 }
 
 export default function NoticiaPage() {
   const [filtro, setFiltro] = useState<'todas' | 'passadas' | 'proximas'>('todas')
+  const { data, isLoading } = useNoticias()
 
-  const filtered = noticias.filter((n) => {
-    if (filtro === 'passadas') return isPast(n.data)
-    if (filtro === 'proximas') return !isPast(n.data)
+  const filtered = (data ?? []).filter((n) => {
+    const data = n.acf.data_evento || n.date
+    if (filtro === 'passadas') return isPast(data)
+    if (filtro === 'proximas') return !isPast(data)
     return true
   })
 
-  // Sort: future first, then past by most recent
   const sorted = [...filtered].sort((a, b) => {
-    const aPast = isPast(a.data)
-    const bPast = isPast(b.data)
+    const aData = a.acf.data_evento || a.date
+    const bData = b.acf.data_evento || b.date
+    const aPast = isPast(aData)
+    const bPast = isPast(bData)
     if (aPast !== bPast) return aPast ? 1 : -1
-    return new Date(b.data).getTime() - new Date(a.data).getTime()
+    return new Date(bData).getTime() - new Date(aData).getTime()
   })
 
   return (
@@ -107,8 +112,17 @@ export default function NoticiaPage() {
 
         {/* News list */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+          {isLoading && (
+            <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--cinza-medio)', fontFamily: 'var(--font-primary)' }}>
+              Carregando...
+            </div>
+          )}
           {sorted.map((noticia, i) => {
-            const past = isPast(noticia.data)
+            const dataEvento = noticia.acf.data_evento || noticia.date
+            const past = isPast(dataEvento)
+            const img = noticia._embedded?.['wp:featuredmedia']?.[0]?.source_url
+              ?? noticia.acf.imagem_capa?.url
+              ?? ''
             return (
               <motion.div
                 key={noticia.id}
@@ -116,7 +130,7 @@ export default function NoticiaPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: i * 0.06 }}
               >
-                <Link to={`/noticias/${noticia.id}`} style={{ textDecoration: 'none', display: 'block' }}>
+                <Link to={`/noticias/${noticia.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
                   <motion.article
                     whileHover={{ x: 4 }}
                     transition={{ duration: 0.2 }}
@@ -143,8 +157,8 @@ export default function NoticiaPage() {
                       }}
                     >
                       <ImageWithFallback
-                        src={noticia.imagem}
-                        alt={noticia.titulo}
+                        src={img}
+                        alt={noticia.title.rendered}
                         style={{
                           width: '100%',
                           height: '100%',
@@ -172,7 +186,7 @@ export default function NoticiaPage() {
                               fontWeight: 500,
                             }}
                           >
-                            {formatDate(noticia.data)}
+                            {formatDate(dataEvento)}
                           </span>
                         </div>
                         <span
@@ -188,7 +202,7 @@ export default function NoticiaPage() {
                             borderRadius: 'var(--radius-full)',
                           }}
                         >
-                          {noticia.categoria}
+                          {noticia.acf.categoria}
                         </span>
                       </div>
 
@@ -206,7 +220,7 @@ export default function NoticiaPage() {
                           overflow: 'hidden',
                         }}
                       >
-                        {noticia.titulo}
+                        {noticia.title.rendered}
                       </h3>
 
                       <span

@@ -1,15 +1,19 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { heroSlides } from '../data/mockData'
 import { ImageWithFallback } from '../figma/ImageWithFallback'
 import { BotaoExplore } from './BotaoExplore'
+import { useOpcoes } from '../hooks/useOpcoes'
+import { heroSlidesMock } from '../data/mocks/heroSlides'
 
 export default function HeroCarousel() {
+  const { data } = useOpcoes()
+  const slides = data?.hero_slides ?? heroSlidesMock
+
   const [current, setCurrent] = useState(0)
   const [isHovered, setIsHovered] = useState(false)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const total = heroSlides.length
+  const total = slides.length
 
   const goTo = useCallback(
     (index: number) => {
@@ -22,12 +26,14 @@ export default function HeroCarousel() {
   const prev = useCallback(() => goTo(current - 1), [current, goTo])
 
   useEffect(() => {
-    if (isHovered) return
+    if (isHovered || total === 0) return
     timerRef.current = setTimeout(next, 5000)
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current)
     }
   }, [current, isHovered, next])
+
+  if (total === 0) return null
 
   return (
     <section
@@ -52,8 +58,8 @@ export default function HeroCarousel() {
               style={{ position: 'relative' }}
             >
               <ImageWithFallback
-                src={heroSlides[current].src}
-                alt={heroSlides[current].alt}
+                src={slides[current].imagem?.url ?? ''}
+                alt={slides[current].imagem?.alt || slides[current].titulo}
                 style={{
                   width: '100%',
                   aspectRatio: '16/9',
@@ -142,7 +148,7 @@ export default function HeroCarousel() {
           role="tablist"
           aria-label="Selecionar slide"
         >
-          {heroSlides.map((_, i) => (
+          {slides.map((_, i) => (
             <button
               key={i}
               role="tab"
@@ -182,7 +188,7 @@ export default function HeroCarousel() {
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
             <h1 className="text-hero" style={{ color: 'var(--white)', marginBottom: '12px' }}>
-              {heroSlides[current].title}
+              {slides[current].titulo}
             </h1>
             <p
               className="text-body"
@@ -192,7 +198,7 @@ export default function HeroCarousel() {
                 margin: '0 auto 28px',
               }}
             >
-              {heroSlides[current].subtitle}
+              {slides[current].subtitulo}
             </p>
           </motion.div>
         </AnimatePresence>

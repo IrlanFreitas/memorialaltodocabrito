@@ -404,6 +404,148 @@ export const parceiros: Parceiro[] = [
   { id: 'p-13', nome: 'Jovens Inovadores', categoria: 'Parceiro Local' },
 ]
 
+// ===== Timeline =====
+export interface TimelineMockItem {
+  slug: string
+  ano: string
+  titulo: string
+  descricao: string
+  conteudoCompleto: string
+  imagem: string
+  galeria: string[]
+  tags: string[]
+  ordem: number
+}
+
+export const timelineMock: TimelineMockItem[] = [
+  {
+    slug: 'primeiros-moradores-1960s',
+    ano: '1960s',
+    titulo: 'Os Primeiros Moradores',
+    descricao: 'Famílias oriundas do interior da Bahia e de outros estados chegam às encostas do Alto do Cabrito em busca de oportunidades na capital.',
+    conteudoCompleto: `<p>Na década de 1960, o Brasil vivia um intenso processo de urbanização. As grandes cidades do Sul e Nordeste atraíam levas de trabalhadores que fugiam da seca e da falta de oportunidades no campo. Salvador, capital da Bahia, foi um desses destinos escolhidos por centenas de famílias.</p>
+<p>O Alto do Cabrito, situado nas encostas do subúrbio ferroviário de Salvador, recebeu seus primeiros moradores fixos nesse período. Famílias inteiras chegavam com pouco mais do que suas malas e sua determinação, construindo abrigos precários mas dignos nas encostas íngremes do bairro.</p>
+<p>Os primeiros moradores vieram principalmente do Recôncavo Baiano, do sertão nordestino e de outros estados. Trouxeram consigo sua cultura, sua culinária, sua religiosidade e uma solidariedade comunitária que seria a base da identidade do Alto do Cabrito pelos próximos anos.</p>
+<p>As habitações eram construídas com materiais simples — madeira, barro, telha de amianto — mas a solidez cultural e comunitária dessas primeiras famílias seria o alicerce de tudo que viria depois.</p>`,
+    imagem: img('1548192746-dd526f154ed9'),
+    galeria: [img('1529156069898-49953e39b3ac'), img('1590736969596-c5d6b94c6e80')],
+    tags: ['Migração', 'Origens', 'Primeiros Moradores'],
+    ordem: 1,
+  },
+  {
+    slug: 'consolidacao-do-bairro-1970s',
+    ano: '1970s',
+    titulo: 'Consolidação do Bairro',
+    descricao: 'O Alto do Cabrito se consolida como comunidade reconhecida, com o surgimento de ruas, comércios locais e a primeira escola improvisada.',
+    conteudoCompleto: `<p>Na década de 1970, o Alto do Cabrito deixou de ser apenas um aglomerado de casas esparsas para se tornar uma comunidade organizada e reconhecida. O crescimento populacional foi expressivo, impulsionado pela continuação do fluxo migratório para Salvador.</p>
+<p>As primeiras ruas foram abertas, ainda sem pavimentação mas já com traçado definido pelos próprios moradores. O pequeno comércio local floresceu: bares, mercearias, açougues e outros estabelecimentos que atendiam às necessidades cotidianas da comunidade.</p>
+<p>A primeira escola improvisada do bairro surgiu nesse período, instalada na casa de uma moradora que se voluntariou para ensinar as crianças que não tinham como se deslocar para escolas distantes. Esse ato de solidariedade plantou a semente do que mais tarde se tornaria a Escola Comunitária do Alto do Cabrito.</p>
+<p>A identidade periférica do bairro começou a se formar com traços únicos: a mistura de sotaques do Nordeste, as festas de padroeiro, os grupos de capoeira nos terreiros, a culinária que combinava influências de diversas regiões do Brasil.</p>`,
+    imagem: img('1590736969596-c5d6b94c6e80'),
+    galeria: [img('1509909756405-be0199881695'), img('1543269664-56d93b1e5db5')],
+    tags: ['Crescimento', 'Comunidade', 'Organização'],
+    ordem: 2,
+  },
+  {
+    slug: 'associacao-de-moradores-1980',
+    ano: '1980',
+    titulo: 'Fundação da Associação de Moradores',
+    descricao: 'Em 14 de março de 1980, é fundada oficialmente a Associação de Moradores do Alto do Cabrito, marco fundamental na organização política e social da comunidade.',
+    conteudoCompleto: `<p>O dia 14 de março de 1980 ficou marcado na história do Alto do Cabrito. Naquela data, lideranças comunitárias de toda a comunidade se reuniram para fundar oficialmente a Associação de Moradores do Alto do Cabrito (AMACA).</p>
+<p>A criação da AMACA foi resultado de anos de mobilização popular. Os moradores perceberam que precisavam de uma voz organizada para dialogar com o poder público e reivindicar melhorias estruturais para o bairro: pavimentação, saneamento, energia elétrica e serviços de saúde.</p>
+<p>A fundação da Associação representou um marco na organização política e social da comunidade. Pela primeira vez, os moradores tinham uma entidade formal que os representava e podia negociar com a Prefeitura de Salvador e com o Estado da Bahia.</p>
+<p>Nos anos seguintes, a AMACA seria protagonista de diversas conquistas importantes para o bairro, desde a instalação de postos de saúde até a construção de quadras esportivas e espaços culturais.</p>`,
+    imagem: img('1468780645347-1e85b8c6d8aa'),
+    galeria: [img('1590736969596-c5d6b94c6e80')],
+    tags: ['AMACA', 'Organização', 'Política', 'Direitos'],
+    ordem: 3,
+  },
+  {
+    slug: 'escola-comunitaria-1985',
+    ano: '1985',
+    titulo: 'Escola Comunitária',
+    descricao: 'A Escola Comunitária do Alto do Cabrito é fundada com recursos dos próprios moradores, oferecendo educação de qualidade para crianças do bairro.',
+    conteudoCompleto: `<p>Em 1985, o sonho de educação do Alto do Cabrito ganhou forma definitiva. A Escola Comunitária do Alto do Cabrito foi fundada com recursos arrecadados pelos próprios moradores, em um esforço coletivo que envolveu doações, bazares, festas e muito trabalho voluntário.</p>
+<p>O prédio da escola foi construído mutirão — cada família contribuiu com o que podia, fosse dinheiro, material de construção ou força de trabalho. O resultado foi uma escola simples, mas carregada de significado: construída pela comunidade, para a comunidade.</p>
+<p>No início, a escola funcionava com professores voluntários, muitos deles moradores do próprio bairro com formação no magistério. Com o tempo, a escola passou a receber apoio da Prefeitura de Salvador, que enviou professores concursados e materiais didáticos.</p>
+<p>A Escola Comunitária se tornou mais que um espaço de ensino formal. Era o lugar onde as crianças do Alto do Cabrito aprendiam não apenas matemática e português, mas também sobre a história de sua própria comunidade, sua cultura e seus valores.</p>`,
+    imagem: img('1529156069898-49953e39b3ac'),
+    galeria: [img('1548192746-dd526f154ed9'), img('1509909756405-be0199881695')],
+    tags: ['Educação', 'Escola', 'Mutirão', 'Comunidade'],
+    ordem: 4,
+  },
+  {
+    slug: 'infraestrutura-e-conquistas-1990s',
+    ano: '1990s',
+    titulo: 'Infraestrutura e Conquistas',
+    descricao: 'Após anos de mobilização popular, o bairro conquista melhorias significativas de infraestrutura: pavimentação, saneamento e abastecimento de água.',
+    conteudoCompleto: `<p>A década de 1990 foi a das grandes conquistas de infraestrutura para o Alto do Cabrito. Após mais de uma década de mobilização da AMACA e pressão constante sobre o poder público, o bairro finalmente começou a receber os investimentos que seus moradores tanto reivindicavam.</p>
+<p>A pavimentação das ruas principais foi a primeira grande vitória. As estradas de terra batida que se transformavam em lamaçal no inverno e levantavam poeira no verão deram lugar ao asfalto, facilitando o acesso de ônibus e melhorando significativamente a qualidade de vida dos moradores.</p>
+<p>A ampliação da rede de saneamento básico foi outro marco importante. O esgoto a céu aberto, que representava risco de saúde pública, foi progressivamente substituído por rede coletora. A mortalidade infantil por doenças de veiculação hídrica caiu drasticamente.</p>
+<p>O acesso regular ao abastecimento de água, que antes dependia de cisternas e caminhões-pipa, também foi garantido nesse período com a expansão da rede da Embasa. As famílias podiam, finalmente, contar com água encanada em suas casas.</p>`,
+    imagem: img('1586339949916-3e9457bef6d3'),
+    galeria: [img('1468780645347-1e85b8c6d8aa')],
+    tags: ['Infraestrutura', 'Saneamento', 'Pavimentação', 'Conquistas'],
+    ordem: 5,
+  },
+  {
+    slug: 'reconhecimento-cultural-2000s',
+    ano: '2000s',
+    titulo: 'Reconhecimento Cultural',
+    descricao: 'O Alto do Cabrito ganha visibilidade pela riqueza de suas manifestações culturais — capoeira, festas juninas, música e arte periférica.',
+    conteudoCompleto: `<p>Os anos 2000 marcaram o início de um novo capítulo para o Alto do Cabrito: o reconhecimento de sua riqueza cultural. O que sempre existiu no interior das casas e nas ruas do bairro passou a ser valorizado e celebrado não apenas pela comunidade, mas também por pesquisadores, artistas e gestores culturais de fora.</p>
+<p>O grupo de capoeira do Alto do Cabrito, fundado nos anos 1970 por um mestre migrante do Recôncavo, ganhou projeção estadual e passou a ser convidado para eventos em todo o Brasil. As festas juninas do bairro, famosas pela sua autenticidade e energia, atraíam visitantes de outros bairros de Salvador.</p>
+<p>A cena musical do bairro também floresceu. Grupos de pagode, samba reggae, forró e funk que haviam se formado de maneira orgânica nos quintais e garagens do Alto do Cabrito passaram a se apresentar em festivais e eventos culturais na cidade.</p>
+<p>Artistas plásticos e grafiteiros da comunidade começaram a ser reconhecidos além das fronteiras do bairro. Os muros do Alto do Cabrito se tornaram uma galeria a céu aberto, com obras que contavam a história e expressavam a identidade do lugar.</p>`,
+    imagem: img('1543269664-56d93b1e5db5'),
+    galeria: [img('1529156069898-49953e39b3ac'), img('1548192746-dd526f154ed9')],
+    tags: ['Cultura', 'Capoeira', 'Arte', 'Identidade'],
+    ordem: 6,
+  },
+  {
+    slug: 'biblioteca-comunitaria-2018',
+    ano: '2018',
+    titulo: 'Biblioteca Comunitária',
+    descricao: 'Inauguração da Biblioteca Comunitária do Alto do Cabrito, resultado de anos de sonho coletivo, com acervo de mais de 3.000 títulos.',
+    conteudoCompleto: `<p>Em 2018, o Alto do Cabrito realizou um sonho antigo: inaugurou sua própria Biblioteca Comunitária. O espaço foi fruto de anos de trabalho coletivo, começando com uma campanha de arrecadação de livros usados que mobilizou toda a comunidade.</p>
+<p>A biblioteca funcionaria inicialmente nas dependências da Escola Comunitária, mas a demanda foi tão grande que logo precisou de um espaço próprio. Graças a financiamento da FAPESB e a parcerias com universidades, foi possível construir e equipar um prédio exclusivo para a biblioteca.</p>
+<p>Com mais de 3.000 títulos no acervo inicial, a Biblioteca Comunitária do Alto do Cabrito cobria desde literatura infantil e juvenil até obras de história, ciências, artes e tecnologia. Uma seção especial foi reservada para obras que tratavam da história das periferias brasileiras e da cultura afro-baiana.</p>
+<p>Além de ser um espaço de leitura e estudo, a biblioteca rapidamente se tornou um polo cultural do bairro. Saraus de poesia, rodas de conversa, exposições de arte, oficinas de contação de histórias e grupos de estudo passaram a acontecer regularmente em suas dependências.</p>`,
+    imagem: img('1509909756405-be0199881695'),
+    galeria: [img('1586339949916-3e9457bef6d3'), img('1529156069898-49953e39b3ac')],
+    tags: ['Biblioteca', 'Educação', 'Cultura', 'Leitura'],
+    ordem: 7,
+  },
+  {
+    slug: 'nascimento-do-memorial-2021',
+    ano: '2021',
+    titulo: 'Nascimento do Memorial',
+    descricao: 'Um grupo de jovens moradores cria o projeto Memorial Alto do Cabrito, iniciando o trabalho de digitalização e preservação da história da comunidade.',
+    conteudoCompleto: `<p>Em 2021, em plena pandemia de Covid-19, um grupo de jovens moradores do Alto do Cabrito decidiu que era hora de agir. Preocupados com o risco de que a história oral do bairro se perdesse com a morte dos mais velhos — acelerada pela pandemia — iniciaram o projeto Memorial Alto do Cabrito.</p>
+<p>O grupo era formado por estudantes universitários, recém-formados e jovens aprendizes que moravam no bairro. Sem recursos mas com muita determinação, começaram visitando os moradores mais antigos para gravar seus depoimentos e digitalizar fotografias e documentos históricos que guardavam em casa.</p>
+<p>Equipados com celulares, scanners domésticos e laptops, o grupo percorreu cada rua do Alto do Cabrito em busca de memórias. Encontraram fotografias raras, documentos históricos, recortes de jornal e objetos que contavam a história da comunidade de maneiras que nenhum livro poderia capturar.</p>
+<p>O trabalho recebeu apoio de pesquisadores da UFBA e de parceiros acadêmicos internacionais, que ajudaram a desenvolver a metodologia de digitalização e catalogação do acervo. Em pouco tempo, o Memorial tinha acumulado milhares de itens em seu banco de dados.</p>`,
+    imagem: img('1590736969596-c5d6b94c6e80'),
+    galeria: [img('1543269664-56d93b1e5db5'), img('1468780645347-1e85b8c6d8aa')],
+    tags: ['Memorial', 'Digitalização', 'Jovens', 'Preservação'],
+    ordem: 8,
+  },
+  {
+    slug: 'memorial-online-2026',
+    ano: '2026',
+    titulo: 'Memorial Online',
+    descricao: 'Lançamento da plataforma digital do Memorial Alto do Cabrito, tornando o acervo histórico acessível para toda a comunidade e para pesquisadores do mundo.',
+    conteudoCompleto: `<p>Em 2026, o projeto Memorial Alto do Cabrito deu um salto de qualidade com o lançamento de sua plataforma digital. O site reúne, de forma organizada e acessível, todo o acervo histórico levantado pelos jovens pesquisadores da comunidade ao longo de cinco anos de trabalho intenso.</p>
+<p>A plataforma conta com acervo fotográfico, sonoro e documental; hemeroteca com recortes de jornais e revistas ao longo de décadas; perfis de figuras notáveis da comunidade; notícias e eventos; e esta própria timeline da história do bairro.</p>
+<p>O lançamento da plataforma foi celebrado com um evento na Biblioteca Comunitária do Alto do Cabrito, com a presença de moradores de todas as gerações, pesquisadores, parceiros acadêmicos e representantes do poder público. Para muitos presentes, foi um momento de emoção ao ver a história de suas famílias registrada e disponível para o mundo.</p>
+<p>Com a plataforma online, o Memorial Alto do Cabrito se torna acessível não apenas para os moradores do bairro, mas para pesquisadores, estudantes e interessados em todo o Brasil e no mundo. É a concretização de um sonho coletivo: garantir que a história do Alto do Cabrito seja preservada e celebrada por muitas gerações.</p>`,
+    imagem: img('1548192746-dd526f154ed9'),
+    galeria: [img('1590736969596-c5d6b94c6e80'), img('1529156069898-49953e39b3ac'), img('1509909756405-be0199881695')],
+    tags: ['Plataforma Digital', 'Lançamento', 'Acervo', 'Memorial'],
+    ordem: 9,
+  },
+]
+
 // ===== Grupo Comunitário =====
 export const grupoInfo = {
   nome: 'Grupo Comunitário Memorial Alto do Cabrito',

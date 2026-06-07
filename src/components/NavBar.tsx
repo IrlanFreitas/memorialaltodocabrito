@@ -7,8 +7,8 @@ const navLinks = [
   { href: '/', label: 'Início' },
   { href: '/historia', label: 'Nossa História' },
   { href: '/acervo', label: 'Acervo' },
+  { href: '/midia', label: 'Mídia' },
   { href: '/figuras-notaveis', label: 'Figuras Notáveis' },
-  { href: '/hemeroteca', label: 'Hemeroteca' },
   { href: '/projetos', label: 'Projetos' },
   { href: '/noticias', label: 'Notícias' },
 ]
@@ -156,32 +156,6 @@ export default function NavBar() {
               )
             })}
           </nav>
-
-          {/* Desktop CTA */}
-          <Link
-            to="/acervo"
-            className="hidden lg:flex"
-            style={{
-              alignItems: 'center',
-              gap: '6px',
-              backgroundColor: 'var(--preto)',
-              color: 'var(--white)',
-              padding: '10px 18px',
-              borderRadius: 'var(--radius-md)',
-              textDecoration: 'none',
-              fontSize: '13px',
-              fontWeight: 700,
-              fontFamily: 'var(--font-primary)',
-              whiteSpace: 'nowrap',
-              transition: 'opacity 200ms',
-              flexShrink: 0,
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.85')}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
-          >
-            Explorar Acervo
-            <ArrowRight size={14} strokeWidth={2.5} />
-          </Link>
 
           {/* Mobile spacer (mirrors the hamburger) */}
           <div className="lg:hidden" style={{ width: '40px', flexShrink: 0 }} />
