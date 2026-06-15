@@ -4,7 +4,7 @@ import type { WPTimeline } from '../types/cms'
 /** Lista completa ordenada cronologicamente (campo `ordem` = ano numérico) */
 export async function fetchTimeline(): Promise<WPTimeline[]> {
   return wpFetch<WPTimeline[]>(
-    `/wp-json/wp/v2/timeline?${WP_LIST_PARAMS}&orderby=meta_value_num&meta_key=ordem&order=asc`,
+    `/wp-json/wp/v2/timeline?${WP_LIST_PARAMS}&meta_key=ordem&order=asc`,
   )
 }
 

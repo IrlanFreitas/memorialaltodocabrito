@@ -3,7 +3,7 @@ import type { WPNoticia } from '../types/cms'
 
 export async function fetchNoticias(): Promise<WPNoticia[]> {
   return wpFetch<WPNoticia[]>(
-    `/wp-json/wp/v2/noticia?${WP_LIST_PARAMS}&orderby=date&order=desc`,
+    `/wp-json/wp/v2/noticia?${WP_LIST_PARAMS}&order=desc`,
   )
 }
 

@@ -76,7 +76,6 @@ export default function NavBar() {
               cursor: 'pointer',
               padding: '8px',
               color: 'var(--preto)',
-              display: 'flex',
               alignItems: 'center',
               borderRadius: '4px',
               flexShrink: 0,
@@ -96,33 +95,20 @@ export default function NavBar() {
               flexShrink: 0,
             }}
           >
-            {/* Mobile: centered logo text */}
-            <span
+            {/* Mobile: logotipo SVG */}
+            <img
+              src="/marca/memorial-logotipo.svg"
+              alt="Memorial Alto do Cabrito"
               className="lg:hidden"
-              style={{
-                fontSize: '15px',
-                fontWeight: 800,
-                color: 'var(--preto)',
-                fontFamily: 'var(--font-primary)',
-                lineHeight: 1.2,
-                textAlign: 'center',
-              }}
-            >
-              Memorial<br />Alto do Cabrito
-            </span>
-            {/* Desktop: logo text */}
-            <span
+              style={{ height: '48px', width: 'auto' }}
+            />
+            {/* Desktop: logo PNG */}
+            <img
+              src="/marca/memorial-logo.png"
+              alt="Memorial Alto do Cabrito"
               className="hidden lg:block"
-              style={{
-                fontSize: '18px',
-                fontWeight: 800,
-                color: 'var(--preto)',
-                fontFamily: 'var(--font-primary)',
-                letterSpacing: '-0.02em',
-              }}
-            >
-              Memorial Alto do Cabrito
-            </span>
+              style={{ height: '56px', width: 'auto' }}
+            />
           </Link>
 
           {/* Desktop nav */}
@@ -218,15 +204,13 @@ export default function NavBar() {
                 <Link
                   to="/"
                   onClick={closeMenu}
-                  style={{
-                    textDecoration: 'none',
-                    fontSize: '15px',
-                    fontWeight: 800,
-                    color: 'var(--preto)',
-                    fontFamily: 'var(--font-primary)',
-                  }}
+                  style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}
                 >
-                  Memorial Alto do Cabrito
+                  <img
+                    src="/marca/memorial-logotipo.svg"
+                    alt="Memorial Alto do Cabrito"
+                    style={{ height: '40px', width: 'auto' }}
+                  />
                 </Link>
                 <button
                   onClick={closeMenu}
