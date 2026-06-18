@@ -1,0 +1,154 @@
+.section {
+  background-color: var(--preto);
+  border-top: 1px solid var(--cinza-borda);
+  border-bottom: 1px solid var(--cinza-borda);
+  padding: 64px 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── Header ── */
+.header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--laranja);
+  font-family: var(--font-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 10px;
+}
+
+.title {
+  font-size: clamp(20px, 3vw, 28px);
+  font-weight: 700;
+  color: var(--white);
+  font-family: var(--font-primary);
+  line-height: 1.2;
+}
+
+/* ── Groups layout ── */
+.groups {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+}
+
+.groupDivider {
+  width: 1px;
+  background-color: var(--cinza-borda);
+  grid-row: 1;
+  display: none; // handled via gap
+}
+
+/* ── Group ── */
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.groupLabel {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--cinza-medio);
+  font-family: var(--font-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--cinza-borda);
+}
+
+/* ── Card ── */
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.logo {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
+  background-color: var(--cinza-card-bg);
+  border: 1px solid var(--cinza-borda);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.logoInitials {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--laranja);
+  font-family: var(--font-primary);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cardName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--white);
+  font-family: var(--font-primary);
+  line-height: 1.3;
+}
+
+.cardDesc {
+  font-size: 13px;
+  color: var(--cinza-medio);
+  font-family: var(--font-primary);
+  line-height: 1.5;
+}
+
+/* ── Mobile ── */
+@media (max-width: 767px) {
+  .section {
+    padding: 48px 0;
+  }
+
+  .container {
+    padding: 0 20px;
+  }
+
+  .header {
+    margin-bottom: 40px;
+    text-align: left;
+  }
+
+  .groups {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .card {
+    gap: 14px;
+  }
+
+  .logo {
+    width: 46px;
+    height: 46px;
+  }
+}

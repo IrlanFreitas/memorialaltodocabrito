@@ -1,12 +1,14 @@
-import React from 'react'
-import HeroCarousel from '../components/HeroCarousel'
-import HistoriaIntro from '../components/HistoriaIntro'
-import AcervoSection from '../components/AcervoSection'
-import FigurasNotaveis from '../components/FigurasNotaveis'
-import MidiaSection from '../components/MidiaSection'
-import GrupoComunitario from '../components/GrupoComunitario'
-import NoticiasSection from '../components/NoticiasSection'
-import ProjetosSection from '../components/ProjetosSection'
+import React from "react";
+import HeroCarousel from "../components/HeroCarousel";
+import HistoriaIntro from "../components/HistoriaIntro";
+import AcervoSection from "../components/AcervoSection";
+import FigurasNotaveis from "../components/FigurasNotaveis";
+import MidiaSection from "../components/MidiaSection";
+import GrupoComunitario from "../components/GrupoComunitario";
+import NoticiasSection from "../components/NoticiasSection";
+import MapaSection from "../components/MapaSection";
+import ParceiroSection from "../components/ParceiroSection";
+import ProjetosSection from "../components/ProjetosSection";
 
 export default function Home() {
   return (
@@ -34,6 +36,12 @@ export default function Home() {
 
       {/* Dobra 8: Notícias */}
       <NoticiasSection />
+
+      {/* Mapa do bairro */}
+      <MapaSection />
+
+      {/* Parceiros & Apoiadores */}
+      <ParceiroSection />
     </>
-  )
+  );
 }
