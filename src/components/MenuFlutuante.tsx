@@ -96,37 +96,6 @@ export default function MenuFlutuante() {
             )}
           </AnimatePresence>
 
-          {/* FAB button */}
-          <motion.button
-            onClick={() => setIsOpen((prev) => !prev)}
-            aria-label={isOpen ? 'Fechar menu rápido' : 'Acessar menu rápido do acervo'}
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.94 }}
-            style={{
-              width: '56px',
-              height: '56px',
-              borderRadius: 'var(--radius-full)',
-              backgroundColor: isOpen ? 'var(--preto)' : 'var(--laranja)',
-              border: isOpen ? '2px solid var(--laranja)' : 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: 'var(--shadow-float)',
-              transition: 'background-color 200ms',
-            }}
-          >
-            <motion.div
-              animate={{ rotate: isOpen ? 180 : 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              {isOpen ? (
-                <X size={22} style={{ color: 'var(--laranja)' }} strokeWidth={2.5} />
-              ) : (
-                <BookOpen size={22} style={{ color: 'var(--preto)' }} strokeWidth={2.5} />
-              )}
-            </motion.div>
-          </motion.button>
         </motion.div>
       )}
     </AnimatePresence>

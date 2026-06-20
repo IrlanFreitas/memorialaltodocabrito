@@ -275,6 +275,47 @@ export interface WPTimeline {
 
 export type WPTimelineFormatado = WPPostFormatado & { acf: ACFTimeline }
 
+// ─── CPT: Campanha (Hero Carousel) ───────────────────────────────────────────
+
+export interface ACFCampanha {
+  imagem: ACFImage | null
+  subtitulo: string
+  cta_texto: string
+  cta_url: string
+  ordem: number
+  ativo: boolean
+}
+
+export interface WPCampanha {
+  id: number
+  slug: string
+  title: WPRendered
+  acf: ACFCampanha
+  _embedded?: {
+    'wp:featuredmedia'?: WPFeaturedMedia[]
+  }
+}
+
+// ─── CPT: Grupo Comunitário ───────────────────────────────────────────────────
+
+export interface ACFGrupoComunitario {
+  descricao: string
+  missao: string
+  visao: string
+  valores: Array<{ texto: string }>
+  membros: Array<{ nome: string; papel: string; foto: ACFImage | null }>
+}
+
+export interface WPGrupoComunitario {
+  id: number
+  slug: string
+  title: WPRendered
+  acf: ACFGrupoComunitario
+  _embedded?: {
+    'wp:featuredmedia'?: WPFeaturedMedia[]
+  }
+}
+
 // ─── Options Page: Configurações Globais ──────────────────────────────────────
 
 export interface HeroSlide {

@@ -3,12 +3,11 @@ import { motion, AnimatePresence } from 'motion/react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { ImageWithFallback } from '../figma/ImageWithFallback'
 import { BotaoExplore } from './BotaoExplore'
-import { useOpcoes } from '../hooks/useOpcoes'
-import { heroSlidesMock } from '../data/mocks/heroSlides'
+import { useCampanhas } from '../hooks/useCampanhas'
 
 export default function HeroCarousel() {
-  const { data } = useOpcoes()
-  const slides = data?.hero_slides ?? heroSlidesMock
+  const { data: campanhas } = useCampanhas()
+  const slides = campanhas ?? []
 
   const [current, setCurrent] = useState(0)
   const [isHovered, setIsHovered] = useState(false)
@@ -58,14 +57,22 @@ export default function HeroCarousel() {
               style={{ position: 'relative' }}
             >
               <ImageWithFallback
-                src={slides[current].imagem?.url ?? ''}
-                alt={slides[current].imagem?.alt || slides[current].titulo}
+                src={
+                  slides[current].acf.imagem?.url ??
+                  slides[current]._embedded?.['wp:featuredmedia']?.[0]?.source_url ??
+                  ''
+                }
+                alt={
+                  slides[current].acf.imagem?.alt ||
+                  slides[current]._embedded?.['wp:featuredmedia']?.[0]?.alt_text ||
+                  slides[current].title.rendered
+                }
                 style={{
                   width: '100%',
-                  aspectRatio: '16/9',
+                  height: 'clamp(280px, 52vw, 560px)',
                   objectFit: 'cover',
+                  objectPosition: 'center center',
                   display: 'block',
-                  maxHeight: '520px',
                 }}
               />
               {/* Gradient overlay */}
@@ -188,7 +195,7 @@ export default function HeroCarousel() {
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
             <h1 className="text-hero" style={{ color: 'var(--white)', marginBottom: '12px' }}>
-              {slides[current].titulo}
+              {slides[current].title.rendered}
             </h1>
             <p
               className="text-body"
@@ -198,12 +205,15 @@ export default function HeroCarousel() {
                 margin: '0 auto 28px',
               }}
             >
-              {slides[current].subtitulo}
+              {slides[current].acf.subtitulo}
             </p>
           </motion.div>
         </AnimatePresence>
         <div style={{ maxWidth: '412px', margin: '0 auto' }}>
-          <BotaoExplore to="/acervo" label="explore o acervo" />
+          <BotaoExplore
+            to={slides[current].acf.cta_url}
+            label={slides[current].acf.cta_texto}
+          />
         </div>
       </div>
     </section>

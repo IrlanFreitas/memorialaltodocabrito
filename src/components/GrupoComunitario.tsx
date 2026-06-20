@@ -4,16 +4,15 @@ import { motion } from 'motion/react'
 import { Heart, Target, Eye, ArrowRight } from 'lucide-react'
 import { ImageWithFallback } from '../figma/ImageWithFallback'
 import { BotaoExplore } from './BotaoExplore'
-import { useOpcoes } from '../hooks/useOpcoes'
-
-const VISAO_PADRAO = 'Ser reconhecido como referência na preservação da memória e história das comunidades periféricas de Salvador, contribuindo para a valorização da cultura e identidade local.'
-const VALORES_PADRAO = ['Memória coletiva', 'Pertencimento', 'Resistência cultural', 'Inclusão comunitária', 'Educação popular']
+import { useGrupoComunitario } from '../hooks/useGrupoComunitario'
 
 export default function GrupoComunitario() {
-  const { data } = useOpcoes()
-  const descricao = data?.grupo_texto ?? ''
-  const missao = data?.grupo_missao ?? ''
-  const foto = data?.historia_imagem?.url ?? ''
+  const { data } = useGrupoComunitario()
+  const descricao = data?.acf.descricao ?? ''
+  const missao = data?.acf.missao ?? ''
+  const visao = data?.acf.visao ?? ''
+  const valores = data?.acf.valores?.map((v) => v.texto) ?? []
+  const foto = data?._embedded?.['wp:featuredmedia']?.[0]?.source_url ?? ''
 
   return (
     <section
@@ -185,7 +184,7 @@ export default function GrupoComunitario() {
                       lineHeight: 1.5,
                     }}
                   >
-                    {VISAO_PADRAO}
+                    {visao}
                   </p>
                 </div>
               </div>
@@ -211,7 +210,7 @@ export default function GrupoComunitario() {
                 Valores
               </p>
               <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                {VALORES_PADRAO.map((v) => (
+                {valores.map((v) => (
                   <li
                     key={v}
                     style={{
