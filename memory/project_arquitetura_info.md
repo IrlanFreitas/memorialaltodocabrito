@@ -107,6 +107,47 @@ O CPT `hemeroteca` existia antes da reorganização. Seu conteúdo deve ser **mi
 
 ---
 
+## CPT: `campanha` (slides do Hero Carousel)
+
+**ACF fields:**
+- `imagem`: ACFImage — imagem de fundo do slide. Tem prioridade sobre o `thumbnail` nativo (featured image); o frontend usa `acf.imagem` e cai para `_embedded['wp:featuredmedia']` como fallback (ver `HeroCarousel.tsx`)
+- `subtitulo`: texto exibido abaixo do título no slide
+- `cta_texto`: texto do botão CTA
+- `cta_url`: URL do botão CTA
+- `ordem`: número — define a posição no carrossel
+- `ativo`: boolean — oculta do carrossel sem excluir
+
+O título do slide usa o campo nativo `title` do WordPress.
+
+**REST endpoint:**
+```
+GET /wp-json/wp/v2/campanha?_embed&status=publish&per_page=100&orderby=meta_value_num&meta_key=ordem
+```
+Filtro client-side por `acf.ativo` (ver `src/services/campanhas.ts`).
+
+---
+
+## CPT: `grupo_comunitario` (página "Quem Somos")
+
+Post único (singleton) — apenas um registro publicado é esperado.
+
+**ACF fields:**
+- `descricao`: texto principal da seção
+- `missao`: texto curto
+- `visao`: texto curto
+- `valores`: repeater `{ texto }`
+- `membros`: repeater `{ nome, papel, foto (ACFImage) }`
+
+A foto de capa usa o `thumbnail` nativo (featured image).
+
+**REST endpoint:**
+```
+GET /wp-json/wp/v2/grupo_comunitario?_embed&status=publish&per_page=1
+```
+Ver `src/services/grupoComunitario.ts` — usa `results[0]` (lança erro se nenhum post existir).
+
+---
+
 ## Arquivos do frontend
 
 | Tipo | Arquivo |
@@ -121,6 +162,11 @@ O CPT `hemeroteca` existia antes da reorganização. Seu conteúdo deve ser **mi
 | Página Acervo | `src/pages/AcervoPage.tsx` — abas: todas / hemeroteca / biblioteca |
 | Página Mídia | `src/pages/MidiaPage.tsx` — abas: todas / fototeca / videoteca / audioteca |
 | Seção Home | `src/components/MidiaSection.tsx` — substituiu HemerotecaSection |
+| Hook campanha | `src/hooks/useCampanhas.ts` — `useCampanhas` |
+| Hook grupo comunitário | `src/hooks/useGrupoComunitario.ts` — `useGrupoComunitario` |
+| Service campanha | `src/services/campanhas.ts` |
+| Service grupo comunitário | `src/services/grupoComunitario.ts` |
+| Componente Grupo Comunitário | `src/components/GrupoComunitario.tsx` |
 
 ---
 
