@@ -37,7 +37,7 @@ export default function HeroCarousel() {
   return (
     <>
       <section
-        style={{ backgroundColor: "var(--preto)", paddingTop: "0px", position: "relative" }}
+        style={{ backgroundColor: "var(--preto)", paddingTop: "0px", position: "relative", marginTop: 60}}
         aria-label="Carrossel de imagens do Alto do Cabrito"
       >
         <div
@@ -69,14 +69,15 @@ export default function HeroCarousel() {
           </p>
           <h1
             className="text-hero"
-            style={{ fontFamily: "var(--font-primary)", margin: "0 0 12px" }}
+            style={{ fontFamily: "var(--font-primary)", margin: "0 0 20px" }}
           >
             Alto do Cabrito
           </h1>
           <p
             style={{
-              fontSize: "13px",
+              fontSize: "18px",
               lineHeight: 1.5,
+              opacity: .8,
               margin: "0 auto",
               maxWidth: "320px",
             }}

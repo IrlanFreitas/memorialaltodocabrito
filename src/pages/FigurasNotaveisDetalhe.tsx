@@ -59,7 +59,7 @@ export default function FigurasNotaveisDetalhe() {
           Figura não encontrada
         </p>
         <Link
-          to="/figuras-notaveis"
+          to="/historia/figuras-notaveis"
           style={{
             color: "var(--laranja)",
             textDecoration: "none",
@@ -98,7 +98,7 @@ export default function FigurasNotaveisDetalhe() {
           style={{ marginBottom: "32px" }}
         >
           <Link
-            to="/figuras-notaveis"
+            to="/historia/figuras-notaveis"
             style={{
               display: "inline-flex",
               alignItems: "center",

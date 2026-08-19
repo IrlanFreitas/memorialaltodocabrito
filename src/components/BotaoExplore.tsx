@@ -8,6 +8,7 @@ interface BotaoExploreProps {
   onClick?: () => void
   label?: string
   fullWidth?: boolean
+  size?: 'sm' | 'md'
   className?: string
 }
 
@@ -16,22 +17,25 @@ export function BotaoExplore({
   onClick,
   label = 'explore',
   fullWidth = true,
+  size = 'md',
   className = '',
 }: BotaoExploreProps) {
+  const sm = size === 'sm'
+
   const style: React.CSSProperties = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: '10px',
+    gap: sm ? '7px' : '10px',
     backgroundColor: 'var(--laranja)',
     color: 'var(--preto)',
-    padding: '16px 32px',
-    borderRadius: 'var(--radius-xl)',
-    fontSize: '18px',
+    padding: sm ? '8px 18px' : '16px 32px',
+    borderRadius: sm ? 'var(--radius-lg)' : 'var(--radius-xl)',
+    fontSize: sm ? '13px' : '18px',
     fontWeight: 700,
     fontFamily: 'var(--font-primary)',
     textDecoration: 'none',
-    minHeight: '56px',
+    minHeight: sm ? '36px' : '56px',
     width: fullWidth ? '100%' : 'auto',
     border: 'none',
     cursor: 'pointer',
@@ -40,7 +44,7 @@ export function BotaoExplore({
   const content = (
     <>
       <span>{label}</span>
-      <ArrowRight size={20} strokeWidth={2.5} />
+      <ArrowRight size={sm ? 14 : 20} strokeWidth={2.5} />
     </>
   )
 

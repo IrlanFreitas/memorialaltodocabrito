@@ -302,8 +302,10 @@ export interface ACFGrupoComunitario {
   descricao: string
   missao: string
   visao: string
-  valores: Array<{ texto: string }>
-  membros: Array<{ nome: string; papel: string; foto: ACFImage | null }>
+  valores: string
+  foto: ACFImage | null
+  equipe_texto: string
+  equipe_foto: ACFImage | null
 }
 
 export interface WPGrupoComunitario {
@@ -311,9 +313,6 @@ export interface WPGrupoComunitario {
   slug: string
   title: WPRendered
   acf: ACFGrupoComunitario
-  _embedded?: {
-    'wp:featuredmedia'?: WPFeaturedMedia[]
-  }
 }
 
 // ─── Options Page: Configurações Globais ──────────────────────────────────────

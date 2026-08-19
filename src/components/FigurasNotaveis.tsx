@@ -86,7 +86,7 @@ export default function FigurasNotaveis() {
                 }}
               >
                 <Link
-                  to={`/figuras-notaveis/${figura.slug}`}
+                  to={`/historia/figuras-notaveis/${figura.slug}`}
                   style={{ textDecoration: "none", display: "block" }}
                 >
                   <motion.article
@@ -225,7 +225,7 @@ export default function FigurasNotaveis() {
           }}
         >
           <BotaoExplore
-            to="/figuras-notaveis"
+            to="/historia/figuras-notaveis"
             label="ver todas as figuras notáveis"
           />
         </motion.div>

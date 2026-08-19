@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router'
 import { motion, AnimatePresence } from 'motion/react'
-import { Archive, X, BookOpen, Users, Newspaper, FolderOpen, Radio } from 'lucide-react'
+import { Archive, X, Users, Newspaper, FolderOpen, Rss, MapPin } from 'lucide-react'
 
 const quickLinks = [
   { to: '/acervo', label: 'Acervo', icon: Archive },
-  { to: '/figuras-notaveis', label: 'Figuras Notáveis', icon: Users },
-  { to: '/hemeroteca', label: 'Hemeroteca', icon: Newspaper },
+  { to: '/historia/figuras-notaveis', label: 'Figuras Notáveis', icon: Users },
+  { to: '/acervo?tab=hemeroteca', label: 'Hemeroteca', icon: Newspaper },
   { to: '/projetos', label: 'Projetos', icon: FolderOpen },
-  { to: '/noticias', label: 'Notícias', icon: Radio },
+  { to: '/mapa', label: 'Mapa do Bairro', icon: MapPin },
+  { to: '/blog', label: 'Blog', icon: Rss },
 ]
 
 export default function MenuFlutuante() {

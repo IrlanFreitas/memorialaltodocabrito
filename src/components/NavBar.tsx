@@ -1,21 +1,68 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router'
 import { motion, AnimatePresence } from 'motion/react'
-import { Menu, X, ArrowRight } from 'lucide-react'
+import {
+  Menu, X, ArrowRight, ChevronDown,
+  Home, BookOpen, Clock, Users, HeartHandshake,
+  Archive, Camera, Video, Headphones, Library, Newspaper,
+  Rocket, MapPin, Rss, CalendarDays, FileText,
+  type LucideIcon,
+} from 'lucide-react'
 
-const navLinks = [
-  { href: '/', label: 'Início' },
-  { href: '/historia', label: 'Nossa História' },
-  { href: '/acervo', label: 'Acervo' },
-  { href: '/midia', label: 'Mídia' },
-  { href: '/figuras-notaveis', label: 'Figuras Notáveis' },
-  { href: '/projetos', label: 'Projetos' },
-  { href: '/noticias', label: 'Notícias' },
+interface NavChild {
+  href: string
+  label: string
+  icon: LucideIcon
+}
+
+interface NavLink {
+  href: string
+  label: string
+  icon: LucideIcon
+  children?: NavChild[]
+}
+
+const navLinks: NavLink[] = [
+  { href: '/', label: 'Início', icon: Home },
+  {
+    href: '/historia', label: 'Nossa História', icon: BookOpen,
+    children: [
+      { href: '/historia/linha-do-tempo', label: 'Linha do Tempo', icon: Clock },
+      { href: '/historia/figuras-notaveis', label: 'Figuras Notáveis', icon: Users },
+      { href: '/historia/grupo-comunitario', label: 'Grupo Comunitário', icon: HeartHandshake },
+    ],
+  },
+  {
+    href: '/acervo', label: 'Acervo', icon: Archive,
+    children: [
+      { href: '/acervo?tab=fototeca', label: 'Fototeca', icon: Camera },
+      { href: '/acervo?tab=videoteca', label: 'Videoteca', icon: Video },
+      { href: '/acervo?tab=audioteca', label: 'Audioteca', icon: Headphones },
+      { href: '/acervo?tab=biblioteca', label: 'Biblioteca', icon: Library },
+      { href: '/acervo?tab=hemeroteca', label: 'Hemeroteca', icon: Newspaper },
+    ],
+  },
+  { href: '/projetos', label: 'Projetos', icon: Rocket },
+  { href: '/mapa', label: 'Mapa do Bairro', icon: MapPin },
+  {
+    href: '/blog', label: 'Blog', icon: Rss,
+    children: [
+      { href: '/blog?tab=noticias', label: 'Notícias', icon: Newspaper },
+      { href: '/blog?tab=eventos', label: 'Eventos || Agenda', icon: CalendarDays },
+      { href: '/blog?tab=postagens', label: 'Postagens', icon: FileText },
+    ],
+  },
 ]
+
+function isLinkActive(pathname: string, href: string) {
+  if (href === '/') return pathname === '/'
+  return pathname === href || pathname.startsWith(`${href}/`)
+}
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
   const location = useLocation()
 
   useEffect(() => {
@@ -26,6 +73,7 @@ export default function NavBar() {
 
   useEffect(() => {
     setIsMenuOpen(false)
+    setOpenDropdown(null)
     document.body.style.overflow = ''
   }, [location.pathname])
 
@@ -114,31 +162,104 @@ export default function NavBar() {
           {/* Desktop nav */}
           <nav
             className="hidden lg:flex"
-            style={{ alignItems: 'center', gap: '28px', flex: 1, justifyContent: 'center' }}
+            style={{ alignItems: 'center', gap: '6px', flex: 1, justifyContent: 'center' }}
           >
             {navLinks.map((link) => {
-              const isActive = location.pathname === link.href
+              const isActive = isLinkActive(location.pathname, link.href)
+              const Icon = link.icon
+              const hasChildren = !!link.children?.length
+              const isOpen = openDropdown === link.href
+
               return (
-                <Link
+                <div
                   key={link.href}
-                  to={link.href}
-                  style={{
-                    textDecoration: 'none',
-                    fontSize: '14px',
-                    fontWeight: 600,
-                    fontFamily: 'var(--font-primary)',
-                    color: 'var(--preto)',
-                    opacity: isActive ? 1 : 0.7,
-                    transition: 'opacity 200ms',
-                    whiteSpace: 'nowrap',
-                    borderBottom: isActive ? '2px solid var(--preto)' : '2px solid transparent',
-                    paddingBottom: '2px',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
-                  onMouseLeave={(e) => (e.currentTarget.style.opacity = isActive ? '1' : '0.7')}
+                  style={{ position: 'relative' }}
+                  onMouseEnter={() => hasChildren && setOpenDropdown(link.href)}
+                  onMouseLeave={() => hasChildren && setOpenDropdown(null)}
                 >
-                  {link.label}
-                </Link>
+                  <Link
+                    to={link.href}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      textDecoration: 'none',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      fontFamily: 'var(--font-primary)',
+                      color: 'var(--preto)',
+                      opacity: isActive ? 1 : 0.75,
+                      transition: 'opacity 200ms',
+                      whiteSpace: 'nowrap',
+                      padding: '8px 10px',
+                      borderRadius: 'var(--radius-md)',
+                      backgroundColor: isOpen ? 'rgba(0,0,0,0.06)' : 'transparent',
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
+                    onMouseLeave={(e) => (e.currentTarget.style.opacity = isActive ? '1' : '0.75')}
+                  >
+                    <Icon size={15} />
+                    {link.label}
+                    {hasChildren && (
+                      <ChevronDown
+                        size={13}
+                        style={{ transition: 'transform 200ms', transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                      />
+                    )}
+                  </Link>
+
+                  {/* Dropdown desktop */}
+                  <AnimatePresence>
+                    {hasChildren && isOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        transition={{ duration: 0.15 }}
+                        style={{
+                          position: 'absolute',
+                          top: 'calc(100% + 6px)',
+                          left: 0,
+                          minWidth: '220px',
+                          backgroundColor: 'var(--preto-soft)',
+                          border: '1px solid var(--cinza-borda)',
+                          borderRadius: 'var(--radius-lg)',
+                          boxShadow: 'var(--shadow-card-hover)',
+                          padding: '8px',
+                          zIndex: 60,
+                        }}
+                      >
+                        {link.children!.map((child) => {
+                          const ChildIcon = child.icon
+                          return (
+                            <Link
+                              key={child.href}
+                              to={child.href}
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                                padding: '10px 12px',
+                                borderRadius: 'var(--radius-md)',
+                                textDecoration: 'none',
+                                color: 'var(--white)',
+                                fontSize: '13px',
+                                fontWeight: 500,
+                                fontFamily: 'var(--font-primary)',
+                                transition: 'background-color 150ms',
+                              }}
+                              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255,157,0,0.12)')}
+                              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                            >
+                              <ChildIcon size={15} />
+                              {child.label}
+                            </Link>
+                          )
+                        })}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               )
             })}
           </nav>
@@ -181,7 +302,7 @@ export default function NavBar() {
                 top: 0,
                 left: 0,
                 bottom: 0,
-                width: '280px',
+                width: '300px',
                 maxWidth: '85vw',
                 zIndex: 99,
                 backgroundColor: 'var(--preto-soft)',
@@ -233,13 +354,15 @@ export default function NavBar() {
               {/* Drawer nav links */}
               <nav style={{ flex: 1, padding: '16px 0' }}>
                 {navLinks.map((link, i) => {
-                  const isActive = location.pathname === link.href
+                  const isActive = isLinkActive(location.pathname, link.href)
+                  const Icon = link.icon
                   return (
                     <motion.div
                       key={link.href}
                       initial={{ opacity: 0, x: -16 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.05 + i * 0.04, duration: 0.25 }}
+                      style={{ borderBottom: '1px solid var(--cinza-borda)' }}
                     >
                       <Link
                         to={link.href}
@@ -247,18 +370,48 @@ export default function NavBar() {
                         style={{
                           display: 'flex',
                           alignItems: 'center',
+                          gap: '12px',
                           padding: '14px 24px',
                           textDecoration: 'none',
-                          fontSize: '18px',
+                          fontSize: '17px',
                           fontWeight: 700,
                           color: isActive ? 'var(--laranja)' : 'var(--white)',
                           fontFamily: 'var(--font-primary)',
-                          borderBottom: '1px solid var(--cinza-borda)',
                           transition: 'color 150ms',
                         }}
                       >
+                        <Icon size={18} />
                         {link.label}
                       </Link>
+
+                      {link.children && (
+                        <div style={{ paddingBottom: '10px' }}>
+                          {link.children.map((child) => {
+                            const ChildIcon = child.icon
+                            return (
+                              <Link
+                                key={child.href}
+                                to={child.href}
+                                onClick={closeMenu}
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '10px',
+                                  padding: '10px 24px 10px 52px',
+                                  textDecoration: 'none',
+                                  fontSize: '14px',
+                                  fontWeight: 500,
+                                  color: 'var(--cinza-texto)',
+                                  fontFamily: 'var(--font-primary)',
+                                }}
+                              >
+                                <ChildIcon size={15} />
+                                {child.label}
+                              </Link>
+                            )
+                          })}
+                        </div>
+                      )}
                     </motion.div>
                   )
                 })}

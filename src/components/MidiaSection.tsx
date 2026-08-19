@@ -51,7 +51,7 @@ export default function MidiaSection() {
             </h2>
           </div>
           <Link
-            to="/midia"
+            to="/acervo"
             style={{
               display: 'flex', alignItems: 'center', gap: '6px',
               color: 'var(--laranja)', fontSize: '14px', fontWeight: 600,
@@ -83,7 +83,7 @@ export default function MidiaSection() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: i * 0.12 }}
               >
-                <Link to="/midia" style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
+                <Link to="/acervo" style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
                   <motion.article
                     whileHover={{ y: -4 }}
                     transition={{ duration: 0.3 }}
@@ -174,7 +174,7 @@ export default function MidiaSection() {
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.5 }}
           style={{ marginTop: '32px', maxWidth: '412px', margin: '32px auto 0' }}
         >
-          <BotaoExplore to="/midia" label="explorar mídia" />
+          <BotaoExplore to="/acervo" label="explorar mídia" />
         </motion.div>
       </div>
     </section>

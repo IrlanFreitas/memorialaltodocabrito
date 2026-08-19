@@ -57,11 +57,11 @@ export default function Footer() {
             <ul className={s.navList}>
               {[
                 { to: "/historia", label: "Nossa História" },
+                { to: "/historia/figuras-notaveis", label: "Figuras Notáveis" },
                 { to: "/acervo", label: "Acervo Digital" },
-                { to: "/figuras-notaveis", label: "Figuras Notáveis" },
-                { to: "/midia", label: "Mídia" },
                 { to: "/projetos", label: "Projetos" },
-                { to: "/noticias", label: "Notícias" },
+                { to: "/mapa", label: "Mapa do Bairro" },
+                { to: "/blog", label: "Blog" },
               ].map(({ to, label }) => (
                 <li key={to}>
                   <Link to={to} className={s.navLink}>
@@ -77,7 +77,7 @@ export default function Footer() {
             <h4 className={s.label}>Institucional</h4>
             <ul className={s.navList}>
               {[
-                { to: "/sobre", label: "Quem Somos" },
+                { to: "/historia/grupo-comunitario", label: "Quem Somos" },
                 { to: "/projetos", label: "Projetos Realizados" },
                 { to: "/acervo", label: "Contribuir com o Acervo" },
               ].map(({ to, label }) => (

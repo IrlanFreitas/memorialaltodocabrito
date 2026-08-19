@@ -81,6 +81,13 @@ export default function FigurasNotaveisPage() {
                 Início
               </Link>{" "}
               /{" "}
+              <Link
+                to="/historia"
+                style={{ color: "var(--cinza-medio)", textDecoration: "none" }}
+              >
+                Nossa História
+              </Link>{" "}
+              /{" "}
               <span style={{ color: "var(--laranja)" }}>Figuras Notáveis</span>
             </p>
             <h1
@@ -215,7 +222,7 @@ export default function FigurasNotaveisPage() {
                 transition={{ duration: 0.5, delay: i * 0.06 }}
               >
                 <Link
-                  to={`/figuras-notaveis/${figura.slug}`}
+                  to={`/historia/figuras-notaveis/${figura.slug}`}
                   style={{ textDecoration: "none" }}
                 >
                   <motion.article

@@ -14,22 +14,17 @@ export const grupoComunitarioMock: WPGrupoComunitario = {
       'Preservar e difundir a história e a cultura do Alto do Cabrito, promovendo o pertencimento, a resistência e a educação popular entre moradores de todas as gerações.',
     visao:
       'Ser reconhecido como referência na preservação da memória e história das comunidades periféricas de Salvador, contribuindo para a valorização da cultura e identidade local.',
-    valores: [
-      { texto: 'Memória coletiva' },
-      { texto: 'Pertencimento' },
-      { texto: 'Resistência cultural' },
-      { texto: 'Inclusão comunitária' },
-      { texto: 'Educação popular' },
-    ],
-    membros: [],
-  },
-  _embedded: {
-    'wp:featuredmedia': [
-      {
-        source_url: wpImg('MEM_AC_Foto-75-scaled.jpg'),
-        alt_text: 'Equipe do Grupo Comunitário Memorial Alto do Cabrito',
-        media_details: { width: 0, height: 0 },
-      },
-    ],
+    valores:
+      'Memória coletiva\nPertencimento\nResistência cultural\nInclusão comunitária\nEducação popular',
+    foto: {
+      ID: 1,
+      url: wpImg('MEM_AC_Foto-75-scaled.jpg'),
+      alt: 'Equipe do Grupo Comunitário Memorial Alto do Cabrito',
+      width: 0,
+      height: 0,
+    },
+    equipe_texto:
+      'Coordenação Geral\nPesquisa e Documentação\nComunicação e Acervo Digital\nEducação Popular\nMobilização Comunitária',
+    equipe_foto: null,
   },
 }

@@ -71,7 +71,7 @@ export default function TimelineDetalhe() {
           Marco histórico não encontrado
         </p>
         <Link
-          to="/historia"
+          to="/historia/linha-do-tempo"
           style={{ color: 'var(--laranja)', textDecoration: 'none', fontSize: '14px', fontFamily: 'var(--font-primary)', fontWeight: 600 }}
         >
           ← Voltar para Nossa História
@@ -87,7 +87,7 @@ export default function TimelineDetalhe() {
         {/* Breadcrumb / Voltar */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }} style={{ marginBottom: '32px' }}>
           <Link
-            to="/historia"
+            to="/historia/linha-do-tempo"
             style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--cinza-medio)', textDecoration: 'none', fontSize: '14px', fontFamily: 'var(--font-primary)', fontWeight: 500, transition: 'color 200ms' }}
             onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--laranja)')}
             onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--cinza-medio)')}
@@ -283,7 +283,7 @@ export default function TimelineDetalhe() {
           style={{ marginTop: '56px', paddingTop: '24px', borderTop: '1px solid var(--cinza-borda)' }}
         >
           <Link
-            to="/historia"
+            to="/historia/linha-do-tempo"
             style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--cinza-medio)', textDecoration: 'none', fontSize: '14px', fontFamily: 'var(--font-primary)', fontWeight: 500, transition: 'color 200ms' }}
             onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--laranja)')}
             onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--cinza-medio)')}

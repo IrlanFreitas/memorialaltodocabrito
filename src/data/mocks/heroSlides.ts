@@ -42,7 +42,7 @@ export const heroSlidesMock: HeroSlide[] = [
     titulo: 'A nossa história é de todos nós',
     subtitulo: 'Acervo digital, figuras notáveis, hemeroteca e muito mais',
     cta_texto: 'Figuras notáveis',
-    cta_url: '/figuras-notaveis',
+    cta_url: '/historia/figuras-notaveis',
   },
   {
     imagem: {
@@ -68,6 +68,6 @@ export const heroSlidesMock: HeroSlide[] = [
     titulo: 'Raízes que sustentam o futuro',
     subtitulo: 'Participe da preservação da memória do Alto do Cabrito',
     cta_texto: 'Sobre o memorial',
-    cta_url: '/sobre',
+    cta_url: '/historia/grupo-comunitario',
   },
 ]

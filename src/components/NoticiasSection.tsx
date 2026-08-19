@@ -68,7 +68,7 @@ export default function NoticiasSection() {
             </h2>
           </div>
           <Link
-            to="/noticias"
+            to="/blog"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -171,7 +171,7 @@ export default function NoticiasSection() {
                 }}
               >
                 <Link
-                  to={`/noticias/${noticia.slug}`}
+                  to={`/blog/${noticia.slug}`}
                   style={{ textDecoration: 'none', display: 'block' }}
                 >
                   <motion.article
@@ -378,7 +378,7 @@ export default function NoticiasSection() {
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.5 }}
           style={{ marginTop: '32px', maxWidth: '412px', margin: '32px auto 0' }}
         >
-          <BotaoExplore to="/noticias" label="ver todas as notícias" />
+          <BotaoExplore to="/blog" label="ver todas as notícias" />
         </motion.div>
       </div>
     </section>

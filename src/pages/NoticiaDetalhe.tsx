@@ -36,8 +36,8 @@ export default function NoticiaDetalhe() {
     return (
       <div style={{ backgroundColor: 'var(--preto)', minHeight: '100vh', paddingTop: '80px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
         <p style={{ fontSize: '24px', fontWeight: 700, color: 'var(--white)', fontFamily: 'var(--font-primary)' }}>Notícia não encontrada</p>
-        <Link to="/noticias" style={{ color: 'var(--laranja)', textDecoration: 'none', fontSize: '14px', fontFamily: 'var(--font-primary)', fontWeight: 600 }}>
-          ← Voltar para Notícias
+        <Link to="/blog" style={{ color: 'var(--laranja)', textDecoration: 'none', fontSize: '14px', fontFamily: 'var(--font-primary)', fontWeight: 600 }}>
+          ← Voltar para o Blog
         </Link>
       </div>
     )
@@ -57,13 +57,13 @@ export default function NoticiaDetalhe() {
         {/* Back */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ marginBottom: '32px' }}>
           <Link
-            to="/noticias"
+            to="/blog"
             style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--cinza-medio)', textDecoration: 'none', fontSize: '14px', fontFamily: 'var(--font-primary)', fontWeight: 500, transition: 'color 200ms' }}
             onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--laranja)')}
             onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--cinza-medio)')}
           >
             <ArrowLeft size={16} />
-            Notícias
+            Blog
           </Link>
         </motion.div>
 

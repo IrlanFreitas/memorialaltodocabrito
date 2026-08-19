@@ -123,9 +123,10 @@ body {
 
 /* === Clamp tipográfico === */
 .text-hero {
-  font-size: clamp(28px, 6vw, 48px);
+  font-size: clamp(28px, 6vw, 60px);
   font-weight: 800;
   line-height: 1.15;
+  letter-spacing: 1.5px;
 }
 .text-section {
   font-size: clamp(22px, 5vw, 36px);
@@ -137,6 +138,7 @@ body {
   font-weight: 600;
 }
 .text-body {
-  font-size: clamp(16px, 2vw, 17px);
+  font-size: clamp(16px, 2vw, 24px);
   line-height: 1.6;
+  padding: 4px 16px;
 }

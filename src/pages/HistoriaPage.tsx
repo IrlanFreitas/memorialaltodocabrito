@@ -48,7 +48,8 @@ export default function HistoriaPage() {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <p style={{ fontSize: '11px', fontWeight: 600, color: 'var(--cinza-medio)', fontFamily: 'var(--font-primary)', marginBottom: '8px' }}>
               <Link to="/" style={{ color: 'var(--cinza-medio)', textDecoration: 'none' }}>Início</Link>
-              {' '}/ <span style={{ color: 'var(--laranja)' }}>Nossa História</span>
+              {' '}/ <Link to="/historia" style={{ color: 'var(--cinza-medio)', textDecoration: 'none' }}>Nossa História</Link>
+              {' '}/ <span style={{ color: 'var(--laranja)' }}>Linha do Tempo</span>
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
               <BookOpen size={28} style={{ color: 'var(--laranja)' }} />
@@ -120,7 +121,7 @@ export default function HistoriaPage() {
 
                   {/* Card clicável */}
                   <Link
-                    to={`/historia/${item.slug}`}
+                    to={`/historia/linha-do-tempo/${item.slug}`}
                     style={{ textDecoration: 'none', flex: 1 }}
                   >
                     <motion.div
