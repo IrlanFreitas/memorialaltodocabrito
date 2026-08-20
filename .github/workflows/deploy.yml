@@ -1,0 +1,179 @@
+name: CI + Deploy (CloudPanel)
+
+# Build do SPA (Vite) e publicação na VPS Hostinger/CloudPanel via SSH + rsync.
+#
+# O job `build` roda em todo push e PR (typecheck + build = portão de qualidade).
+# O job `deploy` só roda em push na main (ou manualmente) e reaproveita o artefato.
+#
+# Secrets necessários (Settings > Secrets and variables > Actions):
+#   SSH_HOST         IP ou hostname da VPS
+#   SSH_USER         usuário do site no CloudPanel (dono do htdocs)
+#   SSH_PRIVATE_KEY  chave privada OpenSSH do deploy
+#   SSH_PORT         opcional, default 22
+#   SSH_KNOWN_HOSTS  opcional mas recomendado: saída de `ssh-keyscan -p <porta> <host>`
+#   DEPLOY_PATH      ex.: /home/memorial/htdocs/memorialaltodocabrito.com
+# Variáveis (vars):
+#   VITE_WP_API_URL  ex.: https://cms.memorialaltodocabrito.com  (SEM barra no final)
+#   HEALTHCHECK_URL  ex.: https://memorialaltodocabrito.com
+#
+# Atenção: VITE_WP_API_URL é assado no bundle em tempo de build — trocar a URL
+# exige rodar este workflow de novo, não basta mexer no servidor.
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Simular (rsync --dry-run), sem alterar o servidor'
+        type: boolean
+        default: false
+
+concurrency:
+  group: deploy-frontend-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    name: Typecheck + build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Build (tsc -b && vite build)
+        env:
+          VITE_WP_API_URL: ${{ vars.VITE_WP_API_URL }}
+        run: |
+          if [ -z "$VITE_WP_API_URL" ]; then
+            echo "::warning::variável VITE_WP_API_URL não definida — o build vai cair nos dados mock de src/data/mocks"
+          fi
+          npm run build
+          test -f dist/index.html || { echo "::error::build não gerou dist/index.html"; exit 1; }
+          du -sh dist
+
+      - name: Guardar artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7
+          if-no-files-found: error
+
+  deploy:
+    name: Deploy para produção
+    needs: build
+    if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+    steps:
+      - name: Baixar artefato
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Configurar SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
+        run: |
+          for v in SSH_PRIVATE_KEY SSH_HOST; do
+            if [ -z "${!v}" ]; then echo "::error::secret $v ausente"; exit 1; fi
+          done
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          if [ -n "$SSH_KNOWN_HOSTS" ]; then
+            printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          else
+            echo "::warning::SSH_KNOWN_HOSTS ausente — confiando na primeira conexão (TOFU). Defina o secret para fechar isso."
+            ssh-keyscan -p "$SSH_PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          fi
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Publicar (rsync em duas passadas)
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          test -n "$DEPLOY_PATH" || { echo "::error::secret DEPLOY_PATH ausente"; exit 1; }
+          SSH_CMD="ssh -i ~/.ssh/id_deploy -p $SSH_PORT -o StrictHostKeyChecking=yes"
+          EXTRA=""
+          if [ "$DRY_RUN" = "true" ]; then
+            EXTRA="--dry-run"
+            echo "::notice::modo simulação — nada será alterado no servidor"
+          fi
+          $SSH_CMD "$SSH_USER@$SSH_HOST" "test -d '$DEPLOY_PATH'" \
+            || { echo "::error::destino inexistente: $DEPLOY_PATH"; exit 1; }
+
+          # Passada 1: sobe os assets novos (hash no nome) SEM apagar nada.
+          # Quem estiver com a página aberta continua achando os arquivos antigos.
+          rsync -rlzv --human-readable $EXTRA \
+            --exclude='.well-known/' \
+            -e "$SSH_CMD" \
+            dist/ "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
+
+          # Passada 2: remove o que ficou órfão do build anterior.
+          rsync -rlzv --human-readable --delete $EXTRA \
+            --exclude='.well-known/' \
+            -e "$SSH_CMD" \
+            dist/ "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
+
+      - name: Healthcheck
+        if: ${{ inputs.dry_run != true }}
+        env:
+          HEALTHCHECK_URL: ${{ vars.HEALTHCHECK_URL }}
+        run: |
+          if [ -z "$HEALTHCHECK_URL" ]; then
+            echo "::warning::variável HEALTHCHECK_URL não definida — pulando verificação"
+            exit 0
+          fi
+          for i in 1 2 3 4 5; do
+            code=$(curl -s -o /tmp/index.html -w '%{http_code}' --max-time 20 "$HEALTHCHECK_URL" || echo 000)
+            if [ "$code" = "200" ] && grep -q 'id="root"' /tmp/index.html; then
+              echo "healthcheck OK ($code)"; exit 0
+            fi
+            echo "tentativa $i: HTTP $code — aguardando..."
+            sleep 6
+          done
+          echo "::error::healthcheck falhou em $HEALTHCHECK_URL (último status: $code)"
+          exit 1
+
+      - name: Verificar fallback de SPA
+        if: ${{ inputs.dry_run != true }}
+        env:
+          HEALTHCHECK_URL: ${{ vars.HEALTHCHECK_URL }}
+        run: |
+          [ -n "$HEALTHCHECK_URL" ] || exit 0
+          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 "${HEALTHCHECK_URL%/}/historia/linha-do-tempo")
+          if [ "$code" != "200" ]; then
+            echo "::error::rota interna respondeu $code — falta o fallback try_files \$uri /index.html no vhost do CloudPanel"
+            exit 1
+          fi
+          echo "fallback de SPA OK."
+
+      - name: Limpar credenciais
+        if: always()
+        run: rm -f ~/.ssh/id_deploy
