@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:prod-data": "vite --mode production",
     "build": "tsc -b && vite build",
+    "build:local-data": "tsc -b && vite build --mode development",
     "preview": "vite preview"
   },
   "dependencies": {
