@@ -1,16 +1,22 @@
-import { wpFetch } from './wordpress'
+import { wpFetch, isWpConfigured } from './wordpress'
 import type { WPOpcoes, WPHomeData } from '../types/cms'
 import { heroSlidesMock } from '../data/mocks/heroSlides'
+
+const opcoesMock = { hero_slides: heroSlidesMock } as unknown as WPOpcoes
 
 /**
  * Campos da Options Page (Configurações Globais do Memorial).
  * Endpoint customizado — não requer autenticação.
  */
 export async function fetchOpcoes(): Promise<WPOpcoes> {
-  if (!import.meta.env.VITE_WP_API_URL) {
-    return { hero_slides: heroSlidesMock } as unknown as WPOpcoes
+  if (!isWpConfigured()) return opcoesMock
+
+  try {
+    return await wpFetch<WPOpcoes>('/wp-json/memorial/v1/opcoes')
+  } catch (err) {
+    console.warn('[WP] Falha ao buscar opções, usando mock:', err)
+    return opcoesMock
   }
-  return wpFetch<WPOpcoes>('/wp-json/memorial/v1/opcoes')
 }
 
 /**
