@@ -2,7 +2,7 @@
 // Memorial Alto do Cabrito — Cliente WordPress REST API
 // ─────────────────────────────────────────────────────────────────────────────
 
-const BASE_URL = import.meta.env.VITE_WP_API_URL as string | undefined
+const BASE_URL = (import.meta.env.VITE_WP_API_URL as string | undefined)?.replace(/\/+$/, '')
 
 /** Retorna a URL base do WordPress (sem barra final) */
 export function wpBaseUrl(): string {
@@ -16,9 +16,22 @@ export function wpBaseUrl(): string {
   return BASE_URL
 }
 
+/**
+ * Converte um path no formato "/wp-json/<namespace>/<rota>?<query>" (usado
+ * em todos os services) para "/index.php?rest_route=/<namespace>/<rota>&<query>".
+ * Desde a atualização do plugin wp-rest-cache em produção, os permalinks
+ * bonitos do REST API (/wp-json/...) pararam de funcionar; o formato via
+ * rest_route é o fallback nativo do WP e funciona em qualquer ambiente,
+ * independente da estrutura de permalinks configurada.
+ */
+function toRestRouteUrl(path: string): string {
+  const [route, query] = path.replace(/^\/wp-json/, '').split('?')
+  return `${wpBaseUrl()}/index.php?rest_route=${route}${query ? `&${query}` : ''}`
+}
+
 /** Fetch genérico com tratamento de erros */
 export async function wpFetch<T>(path: string): Promise<T> {
-  const url = `${wpBaseUrl()}${path}`
+  const url = toRestRouteUrl(path)
 
   const res = await fetch(url, {
     headers: { 'Content-Type': 'application/json' },
