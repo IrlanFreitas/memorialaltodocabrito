@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router'
 import { motion } from 'motion/react'
-import { Calendar, Clock, ArrowRight, Newspaper, CalendarDays, FileText, Mail, Phone, Instagram, Facebook, Youtube } from 'lucide-react'
+import { Calendar, Clock, ArrowRight, Newspaper, CalendarDays, FileText, Mail, Phone, Instagram, Facebook, Youtube, MessageCircle } from 'lucide-react'
 import { ImageWithFallback } from '../figma/ImageWithFallback'
 import { useNoticias } from '../hooks/useNoticias'
 import { useOpcoes } from '../hooks/useOpcoes'
@@ -11,7 +11,7 @@ type Aba = 'todas' | 'noticias' | 'eventos' | 'postagens'
 
 const abaConfig: Record<Exclude<Aba, 'todas'>, { label: string; icon: React.ReactNode }> = {
   noticias: { label: 'Notícias', icon: <Newspaper size={14} /> },
-  eventos: { label: 'Eventos || Agenda', icon: <CalendarDays size={14} /> },
+  eventos: { label: 'Agenda', icon: <CalendarDays size={14} /> },
   postagens: { label: 'Postagens', icon: <FileText size={14} /> },
 }
 
@@ -63,11 +63,15 @@ export default function BlogPage() {
     opcoes?.youtube_url && { icon: Youtube, label: 'YouTube', href: opcoes.youtube_url },
   ].filter(Boolean) as { icon: typeof Mail; label: string; href: string }[]
 
+  const whatsappHref = opcoes?.telefone
+    ? `https://wa.me/${opcoes.telefone.replace(/\D/g, '')}?text=${encodeURIComponent('Olá! Vim pelo site do Memorial Alto do Cabrito e gostaria de saber mais.')}`
+    : null
+
   return (
     <div style={{ backgroundColor: 'var(--preto)', minHeight: '100vh', paddingTop: '80px' }}>
       {/* Header */}
       <div style={{ backgroundColor: 'var(--preto-soft)', borderBottom: '1px solid var(--cinza-borda)', padding: '40px 16px' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <p style={{ fontSize: '11px', fontWeight: 600, color: 'var(--cinza-medio)', fontFamily: 'var(--font-primary)', marginBottom: '8px' }}>
               <Link to="/" style={{ color: 'var(--cinza-medio)', textDecoration: 'none' }}>Início</Link>
@@ -81,64 +85,7 @@ export default function BlogPage() {
         </div>
       </div>
 
-      {/* Banner de Participação || Contato */}
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px 16px 0' }}>
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          style={{
-            backgroundColor: 'var(--preto-card)',
-            border: '1px solid var(--cinza-borda)',
-            borderRadius: 'var(--radius-lg)',
-            padding: '28px 24px',
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '20px',
-          }}
-        >
-          <div>
-            <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--white)', fontFamily: 'var(--font-primary)', marginBottom: '6px' }}>
-              Quer participar ou colaborar?
-            </h2>
-            <p style={{ fontSize: '14px', color: 'var(--cinza-texto)', fontFamily: 'var(--font-primary)' }}>
-              Fale com o Grupo Comunitário e acompanhe nossos canais.
-            </p>
-          </div>
-          {contatos.length > 0 && (
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-              {contatos.map((c) => {
-                const Icon = c.icon
-                return (
-                  <a
-                    key={c.label}
-                    href={c.href}
-                    target={c.href.startsWith('http') ? '_blank' : undefined}
-                    rel={c.href.startsWith('http') ? 'noreferrer' : undefined}
-                    style={{
-                      display: 'flex', alignItems: 'center', gap: '6px',
-                      padding: '8px 14px', borderRadius: 'var(--radius-full)',
-                      backgroundColor: 'var(--cinza-card-bg)', border: '1px solid var(--cinza-borda)',
-                      color: 'var(--white)', textDecoration: 'none',
-                      fontSize: '13px', fontFamily: 'var(--font-primary)', fontWeight: 600,
-                      transition: 'border-color 200ms',
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--laranja)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--cinza-borda)')}
-                  >
-                    <Icon size={14} style={{ color: 'var(--laranja)' }} />
-                    {c.label}
-                  </a>
-                )
-              })}
-            </div>
-          )}
-        </motion.div>
-      </div>
-
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px 16px' }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '32px 16px' }}>
         {/* Abas */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px', flexWrap: 'wrap' }}>
           {(['todas', 'noticias', 'eventos', 'postagens'] as Aba[]).map((a) => (
@@ -251,6 +198,82 @@ export default function BlogPage() {
             )
           })}
         </div>
+      </div>
+
+      {/* Banner de Participação || Colaboração */}
+      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '0 16px 48px' }}>
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          style={{
+            backgroundColor: 'var(--preto-card)',
+            border: '1px solid var(--cinza-borda)',
+            borderRadius: 'var(--radius-lg)',
+            padding: '28px 24px',
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '20px',
+          }}
+        >
+          <div>
+            <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--white)', fontFamily: 'var(--font-primary)', marginBottom: '6px' }}>
+              Quer participar ou colaborar?
+            </h2>
+            <p style={{ fontSize: '14px', color: 'var(--cinza-texto)', fontFamily: 'var(--font-primary)' }}>
+              Fale com o Grupo Comunitário e acompanhe nossos canais.
+            </p>
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px' }}>
+            {contatos.map((c) => {
+              const Icon = c.icon
+              return (
+                <a
+                  key={c.label}
+                  href={c.href}
+                  target={c.href.startsWith('http') ? '_blank' : undefined}
+                  rel={c.href.startsWith('http') ? 'noreferrer' : undefined}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '6px',
+                    padding: '8px 14px', borderRadius: 'var(--radius-full)',
+                    backgroundColor: 'var(--cinza-card-bg)', border: '1px solid var(--cinza-borda)',
+                    color: 'var(--white)', textDecoration: 'none',
+                    fontSize: '13px', fontFamily: 'var(--font-primary)', fontWeight: 600,
+                    transition: 'border-color 200ms',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--laranja)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--cinza-borda)')}
+                >
+                  <Icon size={14} style={{ color: 'var(--laranja)' }} />
+                  {c.label}
+                </a>
+              )
+            })}
+            {whatsappHref && (
+              <a
+                href={whatsappHref}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  display: 'flex', alignItems: 'center', gap: '6px',
+                  padding: '8px 16px', borderRadius: 'var(--radius-full)',
+                  backgroundColor: 'var(--laranja)', border: 'none',
+                  color: 'var(--preto)', textDecoration: 'none',
+                  fontSize: '13px', fontFamily: 'var(--font-primary)', fontWeight: 700,
+                  transition: 'opacity 200ms',
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.85')}
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+              >
+                <MessageCircle size={14} />
+                Enviar mensagem no WhatsApp
+              </a>
+            )}
+          </div>
+        </motion.div>
       </div>
     </div>
   )

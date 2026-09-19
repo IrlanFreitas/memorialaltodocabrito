@@ -85,7 +85,7 @@ export default function SobrePage() {
       </div>
 
       <div
-        style={{ maxWidth: "1200px", margin: "0 auto", padding: "40px 16px" }}
+        style={{ maxWidth: "800px", margin: "0 auto", padding: "40px 16px" }}
       >
         {/* Hero image */}
         <motion.div

@@ -90,7 +90,7 @@ export default function ProjetoDetalhe() {
       }}
     >
       <div
-        style={{ maxWidth: "900px", margin: "0 auto", padding: "40px 16px" }}
+        style={{ maxWidth: "800px", margin: "0 auto", padding: "40px 16px" }}
       >
         <motion.div
           initial={{ opacity: 0 }}

@@ -1,7 +1,20 @@
 import React, { useState } from "react";
 import { Link } from "react-router";
 import { motion } from "motion/react";
-import { Search, ArrowRight } from "lucide-react";
+import {
+  Search,
+  ArrowRight,
+  LayoutGrid,
+  Palette,
+  GraduationCap,
+  Landmark,
+  Church,
+  Trophy,
+  Store,
+  HeartPulse,
+  BookOpen,
+  Tag,
+} from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { useFiguras } from "../hooks/useFiguras";
 
@@ -17,16 +30,17 @@ const categorias = [
   "historia",
   "outro",
 ];
-const categoriaLabel: Record<string, string> = {
-  cultura: "Cultura",
-  educacao: "Educação",
-  politica: "Política",
-  religiao: "Religião",
-  esporte: "Esporte",
-  comercio: "Comércio",
-  saude: "Saúde",
-  historia: "História",
-  outro: "Outro",
+const categoriaConfig: Record<string, { label: string; icon: React.ReactNode }> = {
+  Todas: { label: "Todas", icon: <LayoutGrid size={13} /> },
+  cultura: { label: "Cultura", icon: <Palette size={13} /> },
+  educacao: { label: "Educação", icon: <GraduationCap size={13} /> },
+  politica: { label: "Política", icon: <Landmark size={13} /> },
+  religiao: { label: "Religião", icon: <Church size={13} /> },
+  esporte: { label: "Esporte", icon: <Trophy size={13} /> },
+  comercio: { label: "Comércio", icon: <Store size={13} /> },
+  saude: { label: "Saúde", icon: <HeartPulse size={13} /> },
+  historia: { label: "História", icon: <BookOpen size={13} /> },
+  outro: { label: "Outro", icon: <Tag size={13} /> },
 };
 
 export default function FigurasNotaveisPage() {
@@ -168,6 +182,9 @@ export default function FigurasNotaveisPage() {
               key={cat}
               onClick={() => setFiltro(cat)}
               style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
                 padding: "8px 14px",
                 borderRadius: "var(--radius-full)",
                 backgroundColor:
@@ -182,24 +199,20 @@ export default function FigurasNotaveisPage() {
                 transition: "all 200ms",
               }}
             >
-              {cat === "Todas" ? "Todas" : (categoriaLabel[cat] ?? cat)}
+              {categoriaConfig[cat]?.icon}
+              {categoriaConfig[cat]?.label ?? cat}
             </button>
           ))}
         </div>
 
-        {/* Grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(1, 1fr)",
-            gap: "16px",
-          }}
-          className="sm:grid-cols-2 lg:grid-cols-3"
-        >
+        {/* Conteúdo (article) — largura de leitura, centralizado */}
+        <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+
+        {/* Lista — um item por linha */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           {isLoading && (
             <div
               style={{
-                gridColumn: "1/-1",
                 textAlign: "center",
                 padding: "40px 0",
                 color: "var(--cinza-medio)",
@@ -270,7 +283,9 @@ export default function FigurasNotaveisPage() {
                     <div style={{ flex: 1 }}>
                       <span
                         style={{
-                          display: "inline-block",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: "4px",
                           backgroundColor: "rgba(255,157,0,0.15)",
                           color: "var(--laranja)",
                           fontSize: "10px",
@@ -281,7 +296,8 @@ export default function FigurasNotaveisPage() {
                           marginBottom: "6px",
                         }}
                       >
-                        {categoriaLabel[figura.acf.area_atuacao] ??
+                        {categoriaConfig[figura.acf.area_atuacao]?.icon}
+                        {categoriaConfig[figura.acf.area_atuacao]?.label ??
                           figura.acf.area_atuacao}
                       </span>
                       <h3
@@ -340,6 +356,7 @@ export default function FigurasNotaveisPage() {
               </motion.div>
             );
           })}
+        </div>
         </div>
       </div>
     </div>

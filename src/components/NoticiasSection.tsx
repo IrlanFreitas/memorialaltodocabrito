@@ -33,7 +33,7 @@ export default function NoticiasSection() {
         borderTop: '1px solid var(--cinza-borda)',
       }}
     >
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 16px' }}>
+      <div className="@container" style={{ maxWidth: '800px', margin: '0 auto', padding: '0 16px' }}>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 28 }}
@@ -144,12 +144,8 @@ export default function NoticiasSection() {
 
         {/* Cards */}
         <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(1, 1fr)',
-            gap: '16px',
-          }}
-          className="sm:grid-cols-2 lg:grid-cols-2"
+          style={{ display: 'grid', gap: '16px' }}
+          className="grid-cols-1 @min-[640px]:grid-cols-2"
         >
           {destaque.map((noticia, i) => {
             const dataEvento = noticia.acf.data_evento || noticia.date
@@ -161,6 +157,7 @@ export default function NoticiasSection() {
             return (
               <motion.div
                 key={noticia.id}
+                className="w-[80%] max-w-[50rem] mx-auto @min-[640px]:w-full"
                 initial={{ opacity: 0, y: 28 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -199,7 +196,7 @@ export default function NoticiasSection() {
                     }}
                   >
                     {/* Image */}
-                    <div style={{ aspectRatio: '16/9', overflow: 'hidden', position: 'relative' }}>
+                    <div style={{ aspectRatio: '8/3', overflow: 'hidden', position: 'relative' }}>
                       <motion.div
                         whileHover={{ scale: 1.04 }}
                         transition={{ duration: 0.5 }}

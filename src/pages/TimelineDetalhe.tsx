@@ -82,7 +82,7 @@ export default function TimelineDetalhe() {
 
   return (
     <div style={{ backgroundColor: 'var(--preto)', minHeight: '100vh', paddingTop: '80px' }}>
-      <div style={{ maxWidth: '820px', margin: '0 auto', padding: '40px 16px 64px' }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '40px 16px 64px' }}>
 
         {/* Breadcrumb / Voltar */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }} style={{ marginBottom: '32px' }}>

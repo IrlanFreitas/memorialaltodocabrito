@@ -75,9 +75,12 @@ export default function HemerotecaPage() {
           />
         </div>
 
+        {/* Conteúdo (article) — largura de leitura, centralizado */}
+        <div className="@container" style={{ maxWidth: '800px', margin: '0 auto' }}>
+
         <div
-          style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: '20px' }}
-          className="sm:grid-cols-2 lg:grid-cols-3"
+          style={{ display: 'grid', gap: '20px' }}
+          className="grid-cols-1 @min-[480px]:grid-cols-2 @min-[700px]:grid-cols-3"
         >
           {isLoading && (
             <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '40px 0', color: 'var(--cinza-medio)', fontFamily: 'var(--font-primary)' }}>
@@ -204,6 +207,7 @@ export default function HemerotecaPage() {
             </motion.article>
             )
           })}
+        </div>
         </div>
       </div>
     </div>

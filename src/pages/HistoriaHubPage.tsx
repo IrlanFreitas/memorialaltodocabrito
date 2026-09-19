@@ -54,7 +54,7 @@ export default function HistoriaHubPage() {
       </div>
 
       {/* Cards de navegação */}
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 16px' }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '48px 16px' }}>
         <div
           style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px' }}
           className="md:grid-cols-3"

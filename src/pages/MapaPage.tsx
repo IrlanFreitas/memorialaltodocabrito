@@ -58,7 +58,7 @@ export default function MapaPage() {
       <MapaSection />
 
       {/* Pontos importantes */}
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 16px' }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '48px 16px' }}>
         <p
           style={{
             fontSize: '11px', fontWeight: 600, color: 'var(--laranja)', fontFamily: 'var(--font-primary)',

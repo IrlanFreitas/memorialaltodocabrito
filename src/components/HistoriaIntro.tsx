@@ -28,7 +28,7 @@ export default function HistoriaIntro() {
         <motion.div
           {...fadeUp}
           style={{
-            maxWidth: '560px',
+            maxWidth: '680px',
             margin: '0 auto',
             textAlign: 'center',
           }}
@@ -52,8 +52,14 @@ export default function HistoriaIntro() {
           <motion.h2
             {...fadeUp}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-            className="text-section"
-            style={{ color: 'var(--white)', marginBottom: '20px' }}
+            style={{
+              color: 'var(--white)',
+              marginBottom: '16px',
+              fontSize: 'clamp(20px, 3vw, 28px)',
+              fontWeight: 700,
+              lineHeight: 1.2,
+              fontFamily: 'var(--font-primary)',
+            }}
           >
             Nossa história
           </motion.h2>
@@ -62,11 +68,12 @@ export default function HistoriaIntro() {
           <motion.p
             {...fadeUp}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-            className="text-body"
             style={{
               color: 'var(--cinza-texto)',
               marginBottom: '32px',
+              fontSize: 'clamp(13px, 1.3vw, 15px)',
               lineHeight: 1.7,
+              fontFamily: 'var(--font-primary)',
             }}
           >
             O Alto do Cabrito é um bairro periférico de Salvador com uma história rica em resistência,
@@ -75,58 +82,59 @@ export default function HistoriaIntro() {
             uma identidade única na paisagem urbana baiana. Aqui, preservamos esses marcos,
             desafios e conquistas para as gerações presentes e futuras.
           </motion.p>
+        </motion.div>
 
-          {/* Stats row */}
-          <motion.div
-            {...fadeUp}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              gap: '32px',
-              marginBottom: '36px',
-              flexWrap: 'wrap',
-            }}
-          >
-            {[
-              { value: '50+', label: 'Anos de história' },
-              { value: '3.000+', label: 'Famílias' },
-              { value: '200+', label: 'Itens no acervo' },
-            ].map(({ value, label }) => (
-              <div key={label} style={{ textAlign: 'center' }}>
-                <div
-                  style={{
-                    fontSize: '28px',
-                    fontWeight: 800,
-                    color: 'var(--laranja)',
-                    fontFamily: 'var(--font-primary)',
-                    lineHeight: 1,
-                    marginBottom: '4px',
-                  }}
-                >
-                  {value}
-                </div>
-                <div
-                  style={{
-                    fontSize: '12px',
-                    color: 'var(--cinza-medio)',
-                    fontFamily: 'var(--font-primary)',
-                    fontWeight: 500,
-                  }}
-                >
-                  {label}
-                </div>
+        {/* Stats row — usa a largura total do espaço de 1200px */}
+        <motion.div
+          {...fadeUp}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '64px',
+            marginBottom: '36px',
+            flexWrap: 'wrap',
+          }}
+        >
+          {[
+            { value: '50+', label: 'Anos de história' },
+            { value: '3.000+', label: 'Famílias' },
+            { value: '200+', label: 'Itens no acervo' },
+          ].map(({ value, label }) => (
+            <div key={label} style={{ textAlign: 'center' }}>
+              <div
+                style={{
+                  fontSize: '22px',
+                  fontWeight: 800,
+                  color: 'var(--laranja)',
+                  fontFamily: 'var(--font-primary)',
+                  lineHeight: 1,
+                  marginBottom: '4px',
+                }}
+              >
+                {value}
               </div>
-            ))}
-          </motion.div>
+              <div
+                style={{
+                  fontSize: '11px',
+                  color: 'var(--cinza-medio)',
+                  fontFamily: 'var(--font-primary)',
+                  fontWeight: 500,
+                }}
+              >
+                {label}
+              </div>
+            </div>
+          ))}
+        </motion.div>
 
-          {/* CTA */}
-          <motion.div
-            {...fadeUp}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
-          >
-            <BotaoExplore to="/historia" label="explore nossa história" />
-          </motion.div>
+        {/* CTA */}
+        <motion.div
+          {...fadeUp}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
+          style={{ maxWidth: '260px', margin: '0 auto' }}
+        >
+          <BotaoExplore to="/historia" label="explore nossa história" size="sm" />
         </motion.div>
       </div>
     </section>

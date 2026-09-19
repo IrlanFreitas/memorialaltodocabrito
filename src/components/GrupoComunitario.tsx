@@ -38,7 +38,7 @@ export default function GrupoComunitario() {
         borderTop: "1px solid var(--cinza-borda)",
       }}
     >
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 2rem" }}>
+      <div className="@container" style={{ maxWidth: "800px", margin: "0 auto", padding: "0 2rem" }}>
         {/* Section header */}
         <motion.div
           {...FADE_UP()}
@@ -64,14 +64,8 @@ export default function GrupoComunitario() {
 
         {/* Image + description */}
         <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr",
-            gap: "1.5rem",
-            alignItems: "center",
-            marginBottom: "1.5rem",
-          }}
-          className="lg:grid-cols-2"
+          style={{ display: "grid", gap: "1.5rem", alignItems: "center", marginBottom: "1.5rem" }}
+          className="grid-cols-1 @min-[1024px]:grid-cols-2"
         >
           <motion.div
             {...FADE_X("left")}

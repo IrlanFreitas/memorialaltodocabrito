@@ -90,7 +90,7 @@ export default function AcervoPage() {
     <div style={{ backgroundColor: 'var(--preto)', minHeight: '100vh', paddingTop: '80px' }}>
       {/* Page header */}
       <div style={{ backgroundColor: 'var(--preto-soft)', borderBottom: '1px solid var(--cinza-borda)', padding: '40px 16px' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
             <p style={{ fontSize: '11px', fontWeight: 600, color: 'var(--cinza-medio)', fontFamily: 'var(--font-primary)', marginBottom: '8px' }}>
               <Link to="/" style={{ color: 'var(--cinza-medio)', textDecoration: 'none' }}>Início</Link>
@@ -133,6 +133,9 @@ export default function AcervoPage() {
             </button>
           ))}
         </motion.div>
+
+        {/* Conteúdo (article) — largura de leitura, centralizado */}
+        <div className="@container" style={{ maxWidth: '800px', margin: '0 auto' }}>
 
         {/* Descrição da aba ativa */}
         {aba !== 'todas' && (
@@ -206,7 +209,7 @@ export default function AcervoPage() {
         </p>
 
         {/* Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: '20px' }} className="sm:grid-cols-2 lg:grid-cols-3">
+        <div style={{ display: 'grid', gap: '20px' }} className="grid-cols-1 @min-[480px]:grid-cols-2 @min-[700px]:grid-cols-3">
           {filtered.map((item, i) => {
             const itemAba = getAba(item)
             const imgUrl = item._embedded?.['wp:featuredmedia']?.[0]?.source_url
@@ -320,6 +323,7 @@ export default function AcervoPage() {
             <p style={{ fontSize: '16px', fontFamily: 'var(--font-primary)' }}>Nenhum item encontrado com esses filtros.</p>
           </div>
         )}
+        </div>
       </div>
     </div>
   )

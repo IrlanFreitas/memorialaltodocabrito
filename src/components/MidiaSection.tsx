@@ -24,7 +24,7 @@ export default function MidiaSection() {
         borderTop: '1px solid var(--cinza-borda)',
       }}
     >
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 16px' }}>
+      <div className="@container" style={{ maxWidth: '800px', margin: '0 auto', padding: '0 16px' }}>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 28 }}
@@ -67,8 +67,8 @@ export default function MidiaSection() {
 
         {/* Cards */}
         <div
-          style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: '16px' }}
-          className="sm:grid-cols-2 lg:grid-cols-4"
+          style={{ display: 'grid', gap: '16px' }}
+          className="grid-cols-1 @min-[640px]:grid-cols-2 @min-[1024px]:grid-cols-4"
         >
           {destaque.map((item, i) => {
             const imgUrl = item._embedded?.['wp:featuredmedia']?.[0]?.source_url
@@ -78,6 +78,7 @@ export default function MidiaSection() {
             return (
               <motion.div
                 key={item.id}
+                className="w-[80%] max-w-[50rem] mx-auto @min-[640px]:w-full"
                 initial={{ opacity: 0, y: 28 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -95,7 +96,7 @@ export default function MidiaSection() {
                   >
                     <div
                       style={{
-                        aspectRatio: '4/3', overflow: 'hidden',
+                        aspectRatio: '2/1', overflow: 'hidden',
                         position: 'relative', backgroundColor: 'var(--preto-card)',
                       }}
                     >

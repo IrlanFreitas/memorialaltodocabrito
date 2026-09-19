@@ -18,7 +18,7 @@ export default function FigurasNotaveis() {
         borderTop: "1px solid var(--cinza-borda)",
       }}
     >
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 16px" }}>
+      <div className="@container" style={{ maxWidth: "800px", margin: "0 auto", padding: "0 16px" }}>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 28 }}
@@ -61,12 +61,8 @@ export default function FigurasNotaveis() {
 
         {/* Cards — horizontal scroll on mobile, grid on desktop */}
         <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            gap: "12px",
-          }}
-          className="sm:grid-cols-2 lg:grid-cols-4"
+          style={{ display: "grid", gap: "12px" }}
+          className="grid-cols-2 @min-[1024px]:grid-cols-4"
         >
           {destaque.map((figura, i) => {
             const foto =

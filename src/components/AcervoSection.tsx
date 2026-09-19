@@ -24,7 +24,7 @@ export default function AcervoSection() {
         borderTop: '1px solid var(--cinza-borda)',
       }}
     >
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 16px' }}>
+      <div className="@container" style={{ maxWidth: '800px', margin: '0 auto', padding: '0 16px' }}>
         {/* Header */}
         <motion.div
           {...fadeUp}
@@ -50,7 +50,7 @@ export default function AcervoSection() {
                 marginBottom: '8px',
               }}
             >
-              Documentos & Fotografias
+              Fototeca · Videoteca · Audioteca · Biblioteca · Hemeroteca
             </p>
             <h2 className="text-section" style={{ color: 'var(--white)' }}>
               Acervo
@@ -61,12 +61,8 @@ export default function AcervoSection() {
 
         {/* Cards grid */}
         <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(1, 1fr)',
-            gap: '16px',
-          }}
-          className="sm:grid-cols-2 lg:grid-cols-3"
+          style={{ display: 'grid', gap: '16px' }}
+          className="grid-cols-1 @min-[640px]:grid-cols-2 @min-[1024px]:grid-cols-3"
         >
           {destaque.map((item, i) => {
             const img = item._embedded?.['wp:featuredmedia']?.[0]?.source_url
@@ -75,6 +71,7 @@ export default function AcervoSection() {
             return (
             <motion.div
               key={item.id}
+              className="w-[80%] max-w-[50rem] mx-auto @min-[640px]:w-full"
               initial={{ opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -107,7 +104,7 @@ export default function AcervoSection() {
                   }
                 >
                   {/* Image */}
-                  <div style={{ overflow: 'hidden', position: 'relative', aspectRatio: '16/9' }}>
+                  <div style={{ overflow: 'hidden', position: 'relative', aspectRatio: '8/3' }}>
                     <motion.div
                       whileHover={{ scale: 1.04 }}
                       transition={{ duration: 0.5 }}

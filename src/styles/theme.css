@@ -142,3 +142,9 @@ body {
   line-height: 1.6;
   padding: 4px 16px;
 }
+
+/* === Animações === */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

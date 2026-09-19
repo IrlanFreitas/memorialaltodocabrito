@@ -53,7 +53,7 @@ export default function NoticiaDetalhe() {
 
   return (
     <div style={{ backgroundColor: 'var(--preto)', minHeight: '100vh', paddingTop: '80px' }}>
-      <div style={{ maxWidth: '780px', margin: '0 auto', padding: '40px 16px' }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '40px 16px' }}>
         {/* Back */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ marginBottom: '32px' }}>
           <Link

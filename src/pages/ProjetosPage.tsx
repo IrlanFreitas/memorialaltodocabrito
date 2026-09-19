@@ -67,9 +67,12 @@ export default function ProjetosPage() {
           ))}
         </div>
 
+        {/* Conteúdo (article) — largura de leitura, centralizado */}
+        <div className="@container" style={{ maxWidth: '800px', margin: '0 auto' }}>
+
         <div
-          style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: '20px' }}
-          className="sm:grid-cols-2 lg:grid-cols-2"
+          style={{ display: 'grid', gap: '20px' }}
+          className="grid-cols-1 @min-[560px]:grid-cols-2"
         >
           {isLoading && (
             <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '40px 0', color: 'var(--cinza-medio)', fontFamily: 'var(--font-primary)' }}>
@@ -186,6 +189,7 @@ export default function ProjetosPage() {
             </motion.div>
             )
           })}
+        </div>
         </div>
       </div>
     </div>

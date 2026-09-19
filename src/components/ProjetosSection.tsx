@@ -21,7 +21,7 @@ export default function ProjetosSection() {
         borderTop: '1px solid var(--cinza-borda)',
       }}
     >
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 16px' }}>
+      <div className="@container" style={{ maxWidth: '800px', margin: '0 auto', padding: '0 16px' }}>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 28 }}
@@ -77,13 +77,8 @@ export default function ProjetosSection() {
 
         {/* Project cards */}
         <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(1, 1fr)',
-            gap: '16px',
-            marginBottom: '48px',
-          }}
-          className="sm:grid-cols-2 lg:grid-cols-3"
+          style={{ display: 'grid', gap: '16px', marginBottom: '48px' }}
+          className="grid-cols-1 @min-[640px]:grid-cols-2 @min-[1024px]:grid-cols-3"
         >
           {destaque.map((projeto, i) => {
             const img = projeto._embedded?.['wp:featuredmedia']?.[0]?.source_url
@@ -93,6 +88,7 @@ export default function ProjetosSection() {
             return (
             <motion.div
               key={projeto.id}
+              className="w-[80%] max-w-[50rem] mx-auto @min-[640px]:w-full"
               initial={{ opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -127,7 +123,7 @@ export default function ProjetosSection() {
                   }
                 >
                   {/* Image */}
-                  <div style={{ aspectRatio: '16/9', overflow: 'hidden', position: 'relative' }}>
+                  <div style={{ aspectRatio: '8/3', overflow: 'hidden', position: 'relative' }}>
                     <motion.div
                       whileHover={{ scale: 1.04 }}
                       transition={{ duration: 0.5 }}
